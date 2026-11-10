@@ -98,7 +98,7 @@
             box-shadow: 0 6px 20px rgba(2, 132, 199, 0.4);
         }
 
-        /* Hero Section */
+        /* Hero Section with Blur */
         .hero {
             background: linear-gradient(135deg, rgba(2, 132, 199, 0.05), rgba(13, 148, 136, 0.05)), url('https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&w=1920&q=80') center/cover;
             padding: 6rem 8%;
@@ -108,45 +108,33 @@
             align-items: center;
         }
 
+        .hero-content {
+            background: rgba(15, 23, 42, 0.65);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 2.5rem;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+        }
+
         .hero-content h1 {
             font-size: 3rem;
-            color: var(--dark);
+            color: #ffffff;
             line-height: 1.2;
             margin-bottom: 1.2rem;
         }
 
         .hero-content h1 span {
-            color: var(--primary);
+            color: #38bdf8;
         }
 
-        /* Матн аниқ кўриниши учун блур ва шаффоф блок */
-.hero-content {
-    background: rgba(15, 23, 42, 0.65); /* Тўқ рангли ярим шаффоф фон */
-    backdrop-filter: blur(12px); /* Орқа фонни блур (хира) қилиш */
-    -webkit-backdrop-filter: blur(12px); /* Safari браузери учун */
-    padding: 2.5rem;
-    border-radius: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.1); /* Нафис чегара чизиғи */
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
-}
-
-.hero-content h1 {
-    font-size: 3rem;
-    color: #ffffff; /* Салавҳа оқ рангда ёрқин кўринади */
-    line-height: 1.2;
-    margin-bottom: 1.2rem;
-}
-
-.hero-content h1 span {
-    color: #38bdf8; /* Dr. Universal ёзуви учун ёрқин ҳаво ранг */
-}
-
-.hero-content p {
-    font-size: 1.1rem;
-    color: #a4e60a; /* Сиз танлаган яшил ранг (блур фонида жуда аниқ кўринади) */
-    margin-bottom: 2rem;
-    font-weight: 500;
-}
+        .hero-content p {
+            font-size: 1.1rem;
+            color: #a4e60a;
+            margin-bottom: 2rem;
+            font-weight: 500;
+        }
 
         .hero-card {
             background: var(--white);
@@ -282,7 +270,48 @@
             font-size: 1.2rem;
         }
 
-        /* Appointment Form */
+        /* Courses Section */
+        .courses-section {
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            color: var(--white);
+            padding: 5rem 8%;
+            border-radius: 24px;
+            margin: 3rem 0;
+            box-shadow: var(--shadow);
+        }
+
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 2.5rem;
+        }
+
+        .course-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 2.5rem;
+            border-radius: var(--radius);
+            transition: 0.3s;
+        }
+
+        .course-card:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-5px);
+        }
+
+        .course-card h3 {
+            color: #38bdf8;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .course-card p {
+            color: #94a3b8;
+            font-size: 0.95rem;
+        }
+
+        /* Appointment / Contact Section */
         .contact-section {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -316,15 +345,29 @@
             border: 1px solid #334155;
         }
 
-        /* Footer */
+        /* Footer & License */
         footer {
             text-align: center;
-            padding: 2rem;
+            padding: 2.5rem;
             color: #64748b;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
+            background: #e2e8f0;
+            border-top: 1px solid #cbd5e1;
+            border-radius: 20px 20px 0 0;
         }
 
-        /* Responsive Design (Mobile adaptation) */
+        .license-badge {
+            display: inline-block;
+            background: var(--primary-light);
+            color: var(--primary-dark);
+            padding: 0.5rem 1.2rem;
+            border-radius: 50px;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(2, 132, 199, 0.2);
+        }
+
+        /* Responsive Design */
         @media (max-width: 900px) {
             header {
                 padding: 1rem 5%;
@@ -337,6 +380,9 @@
                 padding: 3rem 5%;
                 text-align: center;
             }
+            .hero-content {
+                padding: 1.5rem;
+            }
             .hero-content h1 {
                 font-size: 2.2rem;
             }
@@ -344,7 +390,7 @@
                 grid-template-columns: 1fr;
                 padding: 2rem 1.5rem;
             }
-            .treatments-section {
+            .treatments-section, .courses-section {
                 padding: 3rem 1.5rem;
             }
         }
@@ -360,7 +406,8 @@
         <ul class="nav-links">
             <li><a href="#about">Биз ҳақимизда</a></li>
             <li><a href="#services">Касалликлар</a></li>
-            <li><a href="#treatments">Даволаш усуллари</a></li>
+            <li><a href="#treatments">Даволаш</a></li>
+            <li><a href="#courses">Ўқув курслари</a></li>
             <li><a href="#contact">Боғланиш</a></li>
         </ul>
         <a href="#contact" class="cta-btn">Қабулга ёзилиш</a>
@@ -370,7 +417,7 @@
     <section class="hero" id="about">
         <div class="hero-content">
             <h1>Соғлиғингизни <span>Dr. Universal</span> билан тикланг!</h1>
-            <p >Бизнинг тажрибали мутахассисларимиз ва замонавий-табиий даволаш усулларимиз орқали оғриқлардан халос бўлинг ва соғлом ҳаётга қайтинг.</p>
+            <p>Бизнинг тажрибали мутахассисларимиз ва замонавий-табиий даволаш усулларимиз орқали оғриқлардан халос бўлинг ва соғлом ҳаётга қайтинг.</p>
         </div>
         <div class="hero-card">
             <h3><i class="fa-solid fa-heart-pulse" style="color: var(--primary);"></i> Нима учун биз?</h3>
@@ -450,6 +497,29 @@
             </div>
         </section>
 
+        <!-- Courses Section (NEW) -->
+        <section class="courses-section" id="courses">
+            <div class="section-title" style="color: white;">
+                <h2 style="color: white;">Хотин-қизлар учун ўқув курслари</h2>
+                <p style="color: #94a3b8;">Масканимизда даволашдан ташқари қуйидаги касб ва йўналишлар бўйича ўқув курсларимиз ҳам мавжуд</p>
+            </div>
+
+            <div class="courses-grid">
+                <div class="course-card">
+                    <h3><i class="fa-solid fa-graduation-cap" style="color: var(--accent); margin-right: 8px;"></i> 1. Хижама (Қон олдириш)</h3>
+                    <p>Хижама сирларини профессионал даражада ўрганиб, амалиёт қилишни мутахассислардан ўрганинг.</p>
+                </div>
+                <div class="course-card">
+                    <h3><i class="fa-solid fa-graduation-cap" style="color: var(--accent); margin-right: 8px;"></i> 2. Апитерапия (Асалари билан)</h3>
+                    <p>Асалари маҳсулотлари ва апитерапия орқали даволаш усулларининг тўлиқ сир-асрорларини ўзлаштиринг.</p>
+                </div>
+                <div class="course-card">
+                    <h3><i class="fa-solid fa-graduation-cap" style="color: var(--accent); margin-right: 8px;"></i> 3. Биокоррекция</h3>
+                    <p>Организмни биокоррекция қилиш ва соғломлаштириш курслари орқали малакангизни оширинг.</p>
+                </div>
+            </div>
+        </section>
+
         <!-- Appointment / Contact Section -->
         <section class="contact-section" id="contact">
             <div class="contact-info">
@@ -474,9 +544,12 @@
 
     </div>
 
-    <!-- Footer -->
+    <!-- Footer & License -->
     <footer>
-        <p>&copy; 2026 Dr. Universal Соғломлаштириш Маркази. Барча ҳуқуқлар ҳимояланган.</p>
+        <div class="license-badge">
+            <i class="fa-solid fa-certificate"></i> Лицензия рақами: № 123456 (Ўзгартириш мумкин)
+        </div>
+        <p>&copy; 2026 Dr. Universal Соғломлаштириш ва Ўқув Маркази. Барча ҳуқуқлар ҳимояланган.</p>
     </footer>
 
 </body>
