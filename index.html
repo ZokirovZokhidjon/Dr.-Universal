@@ -119,11 +119,34 @@
             color: var(--primary);
         }
 
-        .hero-content p {
-            font-size: 1.1rem;
-            color: #64748b;
-            margin-bottom: 2rem;
-        }
+        /* Матн аниқ кўриниши учун блур ва шаффоф блок */
+.hero-content {
+    background: rgba(15, 23, 42, 0.65); /* Тўқ рангли ярим шаффоф фон */
+    backdrop-filter: blur(12px); /* Орқа фонни блур (хира) қилиш */
+    -webkit-backdrop-filter: blur(12px); /* Safari браузери учун */
+    padding: 2.5rem;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1); /* Нафис чегара чизиғи */
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+}
+
+.hero-content h1 {
+    font-size: 3rem;
+    color: #ffffff; /* Салавҳа оқ рангда ёрқин кўринади */
+    line-height: 1.2;
+    margin-bottom: 1.2rem;
+}
+
+.hero-content h1 span {
+    color: #38bdf8; /* Dr. Universal ёзуви учун ёрқин ҳаво ранг */
+}
+
+.hero-content p {
+    font-size: 1.1rem;
+    color: #a4e60a; /* Сиз танлаган яшил ранг (блур фонида жуда аниқ кўринади) */
+    margin-bottom: 2rem;
+    font-weight: 500;
+}
 
         .hero-card {
             background: var(--white);
@@ -347,7 +370,7 @@
     <section class="hero" id="about">
         <div class="hero-content">
             <h1>Соғлиғингизни <span>Dr. Universal</span> билан тикланг!</h1>
-            <p>Бизнинг тажрибали мутахассисларимиз ва замонавий-табиий даволаш усулларимиз орқали оғриқлардан халос бўлинг ва соғлом ҳаётга қайтинг.</p>
+            <p >Бизнинг тажрибали мутахассисларимиз ва замонавий-табиий даволаш усулларимиз орқали оғриқлардан халос бўлинг ва соғлом ҳаётга қайтинг.</p>
         </div>
         <div class="hero-card">
             <h3><i class="fa-solid fa-heart-pulse" style="color: var(--primary);"></i> Нима учун биз?</h3>
