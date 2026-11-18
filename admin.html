@@ -17,9 +17,12 @@
         .login-box p { color: #94a3b8; font-size: 0.85rem; margin-bottom: 1.5rem; }
         .login-box input { width: 100%; background: #0f172a; border: 1px solid #334155; color: #fff; padding: 12px; border-radius: 8px; font-size: 1rem; text-align: center; margin-bottom: 1rem; }
         
-        .admin-dashboard { display: none; max-width: 700px; width: 100%; background: var(--card-bg); border: 1px solid var(--border-glow); padding: 2.5rem; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.6); }
+        .admin-dashboard { display: none; max-width: 800px; width: 100%; background: var(--card-bg); border: 1px solid var(--border-glow); padding: 2.5rem; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.6); }
         .admin-dashboard h2 { color: var(--primary); margin-bottom: 1rem; text-align: center; }
         
+        .section-box { background: rgba(30, 41, 59, 0.6); border: 1px solid #334155; padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem; }
+        .section-box h3 { color: var(--primary); font-size: 1.1rem; margin-bottom: 1rem; }
+
         .form-group { display: flex; flex-direction: column; gap: 8px; margin-bottom: 1rem; }
         label { font-size: 0.9rem; color: #cbd5e1; }
         input[type="text"], textarea, select { background: #0f172a; border: 1px solid #334155; color: #fff; padding: 12px; border-radius: 8px; font-family: inherit; }
@@ -27,25 +30,17 @@
         .neon-btn { background: linear-gradient(135deg, #0284c7, #0d9488); color: #fff; padding: 12px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; width: 100%; text-transform: uppercase; transition: 0.3s; }
         .neon-btn:hover { opacity: 0.9; box-shadow: 0 0 15px rgba(56,189,248,0.5); }
         
-        .posts-list { margin-top: 2.5rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.5rem; }
+        .posts-list { margin-top: 1.5rem; }
         .post-row { display: flex; justify-content: space-between; align-items: center; background: #0f172a; padding: 10px 15px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #334155; gap: 10px; }
-        .post-row span { font-size: 0.9rem; color: #cbd5e1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 320px; }
-        .action-btns { display: flex; gap: 6px; }
-        .edit-btn { background: #f59e0b; color: #fff; border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; }
+        .post-row span { font-size: 0.9rem; color: #cbd5e1; }
         .del-btn { background: #ef4444; color: #fff; border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; }
 
         .back-link { display: inline-block; margin-top: 1.5rem; color: #94a3b8; text-decoration: none; font-size: 0.9rem; }
         .back-link:hover { color: var(--primary); }
 
-        #custom-popup {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85); display: none; justify-content: center; align-items: center; z-index: 1000;
-        }
-        .popup-content { background: #0f172a; border: 2px solid #ef4444; padding: 2.5rem; max-width: 380px; width: 90%; text-align: center; border-radius: 16px; box-shadow: 0 0 30px rgba(239, 68, 68, 0.4); }
-        .popup-icon { font-size: 45px; margin-bottom: 10px; }
-        .popup-content h3 { color: #ef4444; margin-bottom: 10px; font-size: 1.3rem; }
-        .popup-content p { font-size: 0.9rem; color: #cbd5e1; margin-bottom: 20px; line-height: 1.5; }
-        .popup-btn { background: #ef4444; color: #fff; border: none; padding: 10px 25px; font-weight: 600; cursor: pointer; border-radius: 6px; text-transform: uppercase; font-size: 0.85rem; }
+        #custom-popup { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: none; justify-content: center; align-items: center; z-index: 1000; }
+        .popup-content { background: #0f172a; border: 2px solid #ef4444; padding: 2.5rem; max-width: 380px; width: 90%; text-align: center; border-radius: 16px; }
+        .popup-btn { background: #ef4444; color: #fff; border: none; padding: 10px 25px; font-weight: 600; cursor: pointer; border-radius: 6px; margin-top: 15px; }
     </style>
 </head>
 <body>
@@ -66,46 +61,90 @@
             <h2>Маъмурият Панели</h2>
             <button class="neon-btn" style="width: auto; padding: 6px 12px; font-size: 0.75rem; background: #ef4444;" onclick="logoutAdmin()">Чиқиш</button>
         </div>
-        <p style="color: #94a3b8; font-size: 0.85rem; margin-bottom: 1.5rem;">Сайтга янгилик қўшиш, таҳрирлаш ёки ўчириш.</p>
 
-        <!-- Таҳрир қилинаётган постнинг ID сини сақлаб турадиган яширин майдон -->
-        <input type="hidden" id="edit-post-id" value="">
+        <!-- Массажистларнинг ҳолатини бошқариш панели -->
+        <div class="section-box">
+            <h3>👨‍⚕️ Массажистлар ҳолатини ўзгартириш</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                
+                <!-- 1-Массажист -->
+                <div style="background:#0f172a; padding:12px; border-radius:8px; border:1px solid #334155;">
+                    <label style="font-weight:bold; color:var(--primary);">1-Массажист</label>
+                    <select id="doc1-status" style="margin-top:6px; margin-bottom:8px;">
+                        <option value="Бўш">🟢 Бўш (Қабул қилишда)</option>
+                        <option value="Банд">🔴 Банд</option>
+                        <option value="Дам олишда">🟡 Дам олишда</option>
+                    </select>
+                    <input type="text" id="doc1-note" placeholder="Қўшимча изоҳ (масалан: 15:00 гача банд)" style="font-size:0.85rem;">
+                </div>
 
-        <div class="form-group">
-            <label>Мазмун тури:</label>
-            <select id="media-type" onchange="toggleMediaType()">
-                <option value="image">Расм юклаш</option>
-                <option value="video">YouTube Видео (iframe код)</option>
-            </select>
-        </div>
+                <!-- 2-Массажист -->
+                <div style="background:#0f172a; padding:12px; border-radius:8px; border:1px solid #334155;">
+                    <label style="font-weight:bold; color:var(--primary);">2-Массажист</label>
+                    <select id="doc2-status" style="margin-top:6px; margin-bottom:8px;">
+                        <option value="Бўш">🟢 Бўш (Қабул қилишда)</option>
+                        <option value="Банд">🔴 Банд</option>
+                        <option value="Дам олишда">🟡 Дам олишда</option>
+                    </select>
+                    <input type="text" id="doc2-note" placeholder="Қўшимча изоҳ" style="font-size:0.85rem;">
+                </div>
 
-        <div class="form-group">
-            <label>Сарлавҳа:</label>
-            <input type="text" id="post-title" placeholder="Масалан: Янги видео лавҳа">
-        </div>
+                <!-- 3-Массажист -->
+                <div style="background:#0f172a; padding:12px; border-radius:8px; border:1px solid #334155;">
+                    <label style="font-weight:bold; color:var(--primary);">3-Массажист</label>
+                    <select id="doc3-status" style="margin-top:6px; margin-bottom:8px;">
+                        <option value="Бўш">🟢 Бўш (Қабул қилишда)</option>
+                        <option value="Банд">🔴 Банд</option>
+                        <option value="Дам олишда">🟡 Дам олишда</option>
+                    </select>
+                    <input type="text" id="doc3-note" placeholder="Қўшимча изоҳ" style="font-size:0.85rem;">
+                </div>
 
-        <div class="form-group" id="file-input-group">
-            <label>Расм файлини танлаш (таҳрирда янгиси танланмаса эскиси сақланади):</label>
-            <input type="file" id="post-file" accept="image/*" style="background:none; border:none; padding:0;">
-        </div>
-
-        <div class="form-group" id="iframe-input-group" style="display: none;">
-            <label>YouTube Iframe коди:</label>
-            <textarea id="post-iframe" rows="3" placeholder='<iframe width="100%" height="200" src="..." ...></iframe>'></textarea>
-        </div>
-
-        <div class="form-group">
-            <label>Қисқача тавсиф:</label>
-            <textarea id="post-desc" rows="2" placeholder="Батафсил маълумот..."></textarea>
-        </div>
-
-        <button id="save-btn" class="neon-btn" onclick="savePost()">Сайтга чиқариш</button>
-        
-        <div class="posts-list">
-            <h3 style="color:var(--primary); font-size:1.1rem; margin-bottom:1rem;">Мавжуд мақола ва видеолар:</h3>
-            <div id="admin-posts-container">
-                <!-- Firebase орқали рўйхат чиқади -->
             </div>
+            <button class="neon-btn" style="margin-top: 1rem; padding: 10px;" onclick="updateDoctorsStatus()">Ҳолатларни янгилаш</button>
+        </div>
+
+        <!-- Беморлардан келган буюртмалар рўйхати -->
+        <div class="section-box">
+            <h3>📋 Қабулга ёзилган беморлар рўйхати</h3>
+            <div id="admin-bookings-container">
+                <p style="color:#94a3b8; font-size:0.9rem;">Ҳозирча мурожаатлар йўқ.</p>
+            </div>
+        </div>
+
+        <!-- Янгилик қўшиш бўлими -->
+        <div class="section-box">
+            <h3>📰 Сайтга янгилик қўшиш</h3>
+            <div class="form-group">
+                <label>Сарлавҳа:</label>
+                <input type="text" id="post-title" placeholder="Масалан: Янги видео лавҳа">
+            </div>
+            <div class="form-group">
+                <label>Мазмун тури:</label>
+                <select id="media-type" onchange="toggleMediaType()">
+                    <option value="image">Расм юклаш</option>
+                    <option value="video">YouTube Видео (iframe код)</option>
+                </select>
+            </div>
+            <div class="form-group" id="file-input-group">
+                <label>Расм файлини танлаш:</label>
+                <input type="file" id="post-file" accept="image/*" style="background:none; border:none; padding:0;">
+            </div>
+            <div class="form-group" id="iframe-input-group" style="display: none;">
+                <label>YouTube Iframe коди:</label>
+                <textarea id="post-iframe" rows="3" placeholder='<iframe ...></iframe>'></textarea>
+            </div>
+            <div class="form-group">
+                <label>Қисқача тавсиф:</label>
+                <textarea id="post-desc" rows="2" placeholder="Батафсил маълумот..."></textarea>
+            </div>
+            <button class="neon-btn" onclick="savePost()">Сайтга чиқариш</button>
+        </div>
+
+        <!-- Мавжуд янгиликларни ўчириш -->
+        <div class="posts-list">
+            <h3 style="color:var(--primary); font-size:1.1rem; margin-bottom:1rem;">Мавжуд мақолалар:</h3>
+            <div id="admin-posts-container"></div>
         </div>
 
         <a href="index.html" class="back-link">← Асосий сайтга қайтиш</a>
@@ -114,17 +153,17 @@
     <!-- Хавфсизлик модали -->
     <div id="custom-popup">
         <div class="popup-content">
-            <div class="popup-icon">🤖👮‍♂️</div>
-            <h3>Сизга мумкинмас!</h3>
-            <p>Бу админ панелига фақат ваколатли шахс кира олади. Киритилган рақам рўйхатда мавжуд эмас!</p>
+            <div style="font-size: 45px; margin-bottom: 10px;">🤖👮‍♂️</div>
+            <h3 style="color: #ef4444; margin-bottom: 10px;">Сизга мумкинмас!</h3>
+            <p style="font-size: 0.9rem; color: #cbd5e1;">Бу админ панелига фақат ваколатли шахс кира олади.</p>
             <button class="popup-btn" onclick="closePopup()">Тўғри</button>
         </div>
     </div>
 
-    <!-- Firebase ва Админ Логикаси -->
+    <!-- Firebase va Admin Skriptlari -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getDatabase, ref, push, set, onValue, remove, get } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        import { getDatabase, ref, push, set, onValue, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCZmmcH3NZfV0-KUtV3-vgrWm_NSuBqouc",
@@ -146,35 +185,108 @@
             if (inputPhone === ALLOWED_PHONE) {
                 document.getElementById('login-screen').style.display = 'none';
                 document.getElementById('dashboard-screen').style.display = 'block';
-                loadAdminPosts();
+                loadAdminData();
             } else {
                 document.getElementById('custom-popup').style.display = 'flex';
             }
         };
 
-        window.closePopup = function() { 
-            document.getElementById('custom-popup').style.display = 'none'; 
-        };
-
+        window.closePopup = function() { document.getElementById('custom-popup').style.display = 'none'; };
         window.logoutAdmin = function() {
             document.getElementById('dashboard-screen').style.display = 'none';
             document.getElementById('login-screen').style.display = 'block';
-            document.getElementById('admin-phone').value = '+998 ';
         };
 
         window.toggleMediaType = function() {
             const type = document.getElementById('media-type').value;
-            if (type === 'image') {
-                document.getElementById('file-input-group').style.display = 'flex';
-                document.getElementById('iframe-input-group').style.display = 'none';
-            } else {
-                document.getElementById('file-input-group').style.display = 'none';
-                document.getElementById('iframe-input-group').style.display = 'flex';
+            document.getElementById('file-input-group').style.display = type === 'image' ? 'flex' : 'none';
+            document.getElementById('iframe-input-group').style.display = type === 'video' ? 'flex' : 'none';
+        };
+
+        // Массажистлар статусини сақлаш
+        window.updateDoctorsStatus = function() {
+            const doctorsData = {
+                doc1: { status: document.getElementById('doc1-status').value, note: document.getElementById('doc1-note').value },
+                doc2: { status: document.getElementById('doc2-status').value, note: document.getElementById('doc2-note').value },
+                doc3: { status: document.getElementById('doc3-status').value, note: document.getElementById('doc3-note').value }
+            };
+
+            set(ref(db, 'doctors'), doctorsData)
+                .then(() => alert('Массажистларнинг ҳолати муваффақиятли янгиланди!'))
+                .catch(err => alert('Хатолик: ' + err.message));
+        };
+
+        // Админда малумотларни юклаш (Беморлар ва Янгиликлар)
+        function loadAdminData() {
+            // Массажистларнинг эски ҳолатини формага чиқариб қўйиш
+            onValue(ref(db, 'doctors'), (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    ['doc1', 'doc2', 'doc3'].forEach(key => {
+                        if (data[key]) {
+                            document.getElementById(`${key}-status`).value = data[key].status || 'Бўш';
+                            document.getElementById(`${key}-note`).value = data[key].note || '';
+                        }
+                    });
+                }
+            });
+
+            // Беморлар буюртмаларини кўрсатиш
+            onValue(ref(db, 'bookings'), (snapshot) => {
+                const data = snapshot.val();
+                const container = document.getElementById('admin-bookings-container');
+                container.innerHTML = '';
+
+                if (!data) {
+                    container.innerHTML = '<p style="color:#64748b; font-size:0.9rem;">Ҳозирча янги мурожаатлар йўқ.</p>';
+                    return;
+                }
+
+                Object.entries(data).reverse().forEach(([id, b]) => {
+                    container.innerHTML += `
+                        <div class="post-row">
+                            <span><b>${b.name}</b> (${b.phone})<br><small style="color:var(--primary);">Танлови: ${b.doctor}</small></span>
+                            <button class="del-btn" onclick="deleteBooking('${id}')">Ўчириш</button>
+                        </div>
+                    `;
+                });
+            });
+
+            // Янгиликларни кўрсатиш
+            onValue(ref(db, 'posts'), (snapshot) => {
+                const data = snapshot.val();
+                const container = document.getElementById('admin-posts-container');
+                container.innerHTML = '';
+
+                if (!data) {
+                    container.innerHTML = '<p style="color:#64748b; font-size:0.9rem;">Ҳозирча хабарлар йўқ.</p>';
+                    return;
+                }
+
+                Object.entries(data).reverse().forEach(([id, p]) => {
+                    container.innerHTML += `
+                        <div class="post-row">
+                            <span>${p.title}</span>
+                            <button class="del-btn" onclick="deletePost('${id}')">Ўчириш</button>
+                        </div>
+                    `;
+                });
+            });
+        }
+
+        window.deleteBooking = function(id) {
+            if (confirm("Ушбу мурожаатни ўчиришни хоҳлайсизми?")) {
+                remove(ref(db, `bookings/${id}`));
+            }
+        };
+
+        window.deletePost = function(id) {
+            if (confirm("Ушбу хабарни ўчиришни хоҳлайсизми?")) {
+                remove(ref(db, `posts/${id}`));
             }
         };
 
         window.savePost = function() {
-            const editId = document.getElementById('edit-post-id').value;
             const type = document.getElementById('media-type').value;
             const title = document.getElementById('post-title').value.trim();
             const desc = document.getElementById('post-desc').value.trim();
@@ -182,125 +294,23 @@
             const iframeCode = document.getElementById('post-iframe').value.trim();
 
             if (!title) {
-                alert('Илтимос, сарлавҳани киритинг!');
+                alert('Сарлавҳани киритинг!');
                 return;
             }
 
             if (type === 'image') {
                 const file = fileInput.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        saveOrUpdateFirebase(editId, { type: 'image', title, desc, content: e.target.result });
-                    };
-                    reader.readAsDataURL(file);
-                } else {
-                    if (editId) {
-                        // Agar tahrirlanayotgan bo'lsa va yangi rasm tanlanmasa, bazadagi eski rasmni saqlab qolamiz
-                        const postRef = ref(db, `posts/${editId}`);
-                        get(postRef).then((snapshot) => {
-                            const oldData = snapshot.val();
-                            saveOrUpdateFirebase(editId, { type: 'image', title, desc, content: oldData.content });
-                        });
-                    } else {
-                        alert('Илтимос, янги расм танланг!');
-                    }
-                }
+                if (!file) { alert('Расм танланг!'); return; }
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    push(ref(db, 'posts'), { type: 'image', title, desc, content: e.target.result, timestamp: Date.now() })
+                        .then(() => alert('Қўшилди!'));
+                };
+                reader.readAsDataURL(file);
             } else {
-                if (!iframeCode) {
-                    alert('Илтимос, YouTube iframe кодини киритинг!');
-                    return;
-                }
-                saveOrUpdateFirebase(editId, { type: 'video', title, desc, content: iframeCode });
-            }
-        };
-
-        function saveOrUpdateFirebase(editId, postData) {
-            postData.timestamp = Date.now();
-
-            if (editId) {
-                // Mavjud postni yangilash (Edit)
-                set(ref(db, `posts/${editId}`), postData).then(() => {
-                    alert('Янгилик муваффақиятли янгиланди!');
-                    resetForm();
-                }).catch(err => alert('Хатолик: ' + err.message));
-            } else {
-                // Yangi post qo'shish
-                push(ref(db, 'posts'), postData).then(() => {
-                    alert('Янгилик муваффақиятли қўшилди!');
-                    resetForm();
-                }).catch(err => alert('Хатолик: ' + err.message));
-            }
-        }
-
-        function resetForm() {
-            document.getElementById('edit-post-id').value = '';
-            document.getElementById('post-title').value = '';
-            document.getElementById('post-desc').value = '';
-            document.getElementById('post-file').value = '';
-            document.getElementById('post-iframe').value = '';
-            document.getElementById('save-btn').textContent = 'Сайтга чиқариш';
-        }
-
-        function loadAdminPosts() {
-            const container = document.getElementById('admin-posts-container');
-            const postsRef = ref(db, 'posts');
-
-            onValue(postsRef, (snapshot) => {
-                const data = snapshot.val();
-                container.innerHTML = '';
-
-                if (!data) {
-                    container.innerHTML = '<p style="color:#64748b; font-size:0.9rem;">Ҳозирча ҳеч қандай хабар йўқ.</p>';
-                    return;
-                }
-
-                const posts = Object.entries(data).map(([key, value]) => ({ id: key, ...value }));
-
-                posts.reverse().forEach((p, index) => {
-                    container.innerHTML += `
-                        <div class="post-row">
-                            <span><b>${index + 1}.</b> ${p.title}</span>
-                            <div class="action-btns">
-                                <button class="edit-btn" onclick="editPost('${p.id}')">Ўзгартириш</button>
-                                <button class="del-btn" onclick="deletePost('${p.id}')">Ўчириш</button>
-                            </div>
-                        </div>
-                    `;
-                });
-            });
-        }
-
-        window.editPost = function(id) {
-            const postRef = ref(db, `posts/${id}`);
-            get(postRef).then((snapshot) => {
-                if (snapshot.exists()) {
-                    const p = snapshot.val();
-                    document.getElementById('edit-post-id').value = id;
-                    document.getElementById('media-type').value = p.type;
-                    toggleMediaType();
-                    document.getElementById('post-title').value = p.title;
-                    document.getElementById('post-desc').value = p.desc;
-                    
-                    if (p.type === 'video') {
-                        document.getElementById('post-iframe').value = p.content;
-                    }
-
-                    document.getElementById('save-btn').textContent = 'Ўзгаришларни сақлаш';
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                }
-            });
-        };
-
-        window.deletePost = function(id) {
-            if (confirm("Ушбу хабарни ўчириб ташлашни хоҳлайсизми?")) {
-                remove(ref(db, `posts/${id}`))
-                    .then(() => {
-                        alert('Хабар муваффақиятли ўчирилди!');
-                    })
-                    .catch((error) => {
-                        alert('Ўчиришда хатолик: ' + error.message);
-                    });
+                if (!iframeCode) { alert('YouTube кодини киритинг!'); return; }
+                push(ref(db, 'posts'), { type: 'video', title, desc, content: iframeCode, timestamp: Date.now() })
+                    .then(() => alert('Қўшилди!'));
             }
         };
     </script>

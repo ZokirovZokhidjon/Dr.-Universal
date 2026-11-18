@@ -18,7 +18,6 @@
             --accent: #f59e0b;
         }
 
-        /* ХАТОЛИК ТУҒРИЛАНДИ: минус (-) белгиси ўрнига юлдузча (*) қўйилди */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; scroll-behavior: smooth; }
 
         body {
@@ -46,23 +45,12 @@
             background: linear-gradient(135deg, #0284c7, #0d9488);
             color: #fff; padding: 0.6rem 1.4rem; border-radius: 50px; text-decoration: none;
             font-weight: 600; font-size: 0.85rem; box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
-            transition: 0.3s; border: 1px solid rgba(255,255,255,0.2); display: inline-block; text-align: center;
+            transition: 0.3s; border: 1px solid rgba(255,255,255,0.2); display: inline-block; text-align: center; cursor: pointer;
         }
         .neon-btn:hover { transform: scale(1.03); box-shadow: 0 0 25px rgba(56, 189, 248, 0.7); }
 
-        .mapoffice {
-            width: 100%;
-            max-width: 1200px;
-            margin: 2rem auto 0 auto;
-            padding: 0 2rem;
-        }
-        .mapoffice iframe {
-            width: 100%;
-            height: 320px;
-            border-radius: 16px;
-            border: 1px solid var(--border-glow);
-            box-shadow: 0 8px 30px rgba(0,0,0,0.4);
-        }
+        .mapoffice { width: 100%; max-width: 1200px; margin: 2rem auto 0 auto; padding: 0 2rem; }
+        .mapoffice iframe { width: 100%; height: 320px; border-radius: 16px; border: 1px solid var(--border-glow); box-shadow: 0 8px 30px rgba(0,0,0,0.4); }
 
         .hero { padding: 3rem 5%; display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 2rem; align-items: center; }
         .hero-content { background: var(--card-bg); backdrop-filter: blur(16px); padding: 2rem; border-radius: 20px; border: 1px solid var(--border-glow); box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
@@ -98,6 +86,20 @@
         .icon-box { width: 45px; height: 45px; background: rgba(56, 189, 248, 0.15); color: var(--primary); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; margin-bottom: 1rem; }
         .card h3 { font-size: 1.1rem; margin-bottom: 0.5rem; color: #fff; }
         .card p { color: #94a3b8; font-size: 0.85rem; }
+
+        /* Массажистларнинг ҳолати (Бўш/Банд эканлиги) блоклари */
+        .doctors-status-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 3rem; }
+        .doctor-card { background: var(--card-bg); border: 1px solid var(--border-glow); padding: 1.5rem; border-radius: 16px; text-align: center; backdrop-filter: blur(10px); }
+        .doctor-card h3 { color: #fff; margin-bottom: 0.5rem; }
+        .status-badge { display: inline-block; padding: 6px 14px; border-radius: 50px; font-weight: 700; font-size: 0.85rem; margin-top: 8px; }
+        .status-free { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); }
+        .status-busy { background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.4); }
+
+        /* Қабулга ёзилиш формаси */
+        .booking-section { background: var(--card-bg); border: 1px solid var(--border-glow); padding: 2.5rem; border-radius: 20px; max-width: 600px; margin: 3rem auto 0 auto; backdrop-filter: blur(15px); }
+        .form-group { display: flex; flex-direction: column; gap: 8px; margin-bottom: 1.2rem; }
+        .form-group label { font-size: 0.9rem; color: #cbd5e1; font-weight: 600; }
+        .form-group input, .form-group select { background: #0f172a; border: 1px solid #334155; color: #fff; padding: 12px; border-radius: 8px; font-family: inherit; font-size: 1rem; }
 
         .dynamic-feed { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
         .feed-card {
@@ -141,9 +143,9 @@
             <li><a href="#about">Биз ҳақимизда</a></li>
             <li><a href="#services">Касалликлар</a></li>
             <li><a href="#treatments">Даволаш</a></li>
-            <li><a href="#courses">Ўқув курслари</a></li>
+            <li><a href="#doctors">Мутахассислар</a></li>
+            <li><a href="#booking">Қабулга ёзилиш</a></li>
             <li><a href="#news">Янгиликлар</a></li>
-            <li><a href="#contact">Боғланиш</a></li>
         </ul>
         <a href="admin.html" class="neon-btn" style="font-size: 0.75rem; padding: 0.4rem 1rem; background: rgba(255,255,255,0.1);">Админ</a>
     </header>
@@ -156,59 +158,74 @@
         <div class="hero-content">
             <h1>Соғлиғингизни <span>Dr. Universal</span> билан тикланг!</h1>
             <p>Тажрибали мутахассислар ва табиий даволаш усуллари орқали оғриқлардан халос бўлинг.</p>
-            <a href="https://t.me/druniversal_bot" target="_blank" class="neon-btn"><i class="fa-solid fa-paper-plane" style="margin-right: 8px;"></i> Қабулга ёзилиш</a>
+            <a href="#booking" class="neon-btn"><i class="fa-solid fa-paper-plane" style="margin-right: 8px;"></i> Қабулга ёзилиш</a>
         </div>
         
         <div class="sidebar-menu-box">
             <a href="#services" class="menu-item-btn"><span style="display:flex;align-items:center;"><i class="fa-solid fa-stethoscope"></i> Касалликлар</span> <i class="fa-solid fa-chevron-right" style="font-size:0.8rem;"></i></a>
             <a href="#treatments" class="menu-item-btn"><span style="display:flex;align-items:center;"><i class="fa-solid fa-hand-holding-medical"></i> Даволаш турлари</span> <i class="fa-solid fa-chevron-right" style="font-size:0.8rem;"></i></a>
-            <a href="#courses" class="menu-item-btn"><span style="display:flex;align-items:center;"><i class="fa-solid fa-graduation-cap"></i> Ўқув курслари</span> <i class="fa-solid fa-chevron-right" style="font-size:0.8rem;"></i></a>
+            <a href="#doctors" class="menu-item-btn"><span style="display:flex;align-items:center;"><i class="fa-solid fa-user-doctor"></i> Массажистлар ҳолати</span> <i class="fa-solid fa-chevron-right" style="font-size:0.8rem;"></i></a>
+            <a href="#booking" class="menu-item-btn"><span style="display:flex;align-items:center;"><i class="fa-solid fa-calendar-check"></i> Онлайн Навбатга ёзилиш</span> <i class="fa-solid fa-chevron-right" style="font-size:0.8rem;"></i></a>
             <a href="#news" class="menu-item-btn"><span style="display:flex;align-items:center;"><i class="fa-solid fa-photo-film"></i> Янгиликлар ва Видеолар</span> <i class="fa-solid fa-chevron-right" style="font-size:0.8rem;"></i></a>
-            <a href="#contact" class="menu-item-btn"><span style="display:flex;align-items:center;"><i class="fa-solid fa-headset"></i> Мурожаат ва Чаt</span> <i class="fa-solid fa-chevron-right" style="font-size:0.8rem;"></i></a>
         </div>
     </section>
 
     <div class="container">
         
-        <section id="services">
+        <!-- Мутахассисларнинг ҳолати (Бўш ёки Банд эканлиги кўринадиган қисм) -->
+        <section id="doctors" style="margin-top: 2rem;">
             <div class="section-title">
-                <h2>Биз даволайдиган касалликлар</h2>
-                <p>Ўзингизни безовта қилаётган муаммолардан халос бўлинг</p>
+                <h2>Мутахассисларимиз вақти ва ҳолати</h2>
+                <p>Қайси массажистимиз бўш эканини кузатиб боринг</p>
             </div>
-            <div class="grid">
-                <div class="card"><div class="icon-box"><i class="fa-solid fa-droplet"></i></div><h3>Қон қуюқлашиши</h3><p>Қон айланишини яхшилаш ва суюлтириш орқали танани тиклаш.</p></div>
-                <div class="card"><div class="icon-box"><i class="fa-solid fa-brain"></i></div><h3>Бош оғриғи</h3><p>Сурункали бош оғриқлари ва мигренни табиий бартараф этиш.</p></div>
-                <div class="card"><div class="icon-box"><i class="fa-solid fa-capsules"></i></div><h3>Варикоз</h3><p>Оёқлардаги томир кенгайишини замонавий табиий усулда даволаш.</p></div>
-                <div class="card"><div class="icon-box"><i class="fa-solid fa-child-reaching"></i></div><h3>Бел ва омуртқа</h3><p>Бел чурраси (грыжа) ва остеохондрозни мутахассис назоратида даволаш.</p></div>
+            <div class="doctors-status-grid" id="doctors-status-container">
+                <!-- JavaScript орқали Firebase'дан янгиланиб туради -->
+                <div class="doctor-card">
+                    <h3>1-Массажист</h3>
+                    <p style="color:#94a3b8; font-size:0.9rem;">Мануал терапевт</p>
+                    <div class="status-badge status-free">Юкланмоқда...</div>
+                </div>
+                <div class="doctor-card">
+                    <h3>2-Массажист</h3>
+                    <p style="color:#94a3b8; font-size:0.9rem;">Хижама мутахассиси</p>
+                    <div class="status-badge status-free">Юкланмоқда...</div>
+                </div>
+                <div class="doctor-card">
+                    <h3>3-Массажист</h3>
+                    <p style="color:#94a3b8; font-size:0.9rem;">Биокоррекция</p>
+                    <div class="status-badge status-free">Юкланмоқда...</div>
+                </div>
             </div>
         </section>
 
-        <section id="treatments" style="margin-top: 3.5rem;">
-            <div class="section-title">
-                <h2>Асосий даволаш йўналишларимиз</h2>
-                <p>Синалган табобат ва тиббиёт усуллари</p>
+        <!-- Беморлар қабул учун ёзиладиган форма -->
+        <section id="booking" class="booking-section">
+            <div class="section-title" style="margin-bottom: 1.5rem;">
+                <h2>Қабул учун ёзилиш</h2>
+                <p>Маълумотларингизни қолдиринг, биз сиз билан боғланамиз</p>
             </div>
-            <div class="grid">
-                <div class="card"><div class="icon-box"><i class="fa-solid fa-circle-check"></i></div><h3>Хижама</h3><p>Қон олдириш орқали организмни шлаклардан тозалаш.</p></div>
-                <div class="card"><div class="icon-box"><i class="fa-solid fa-circle-check"></i></div><h3>Апитерапия</h3><p>Асалари маҳсулотлари билан табиий даволаш.</p></div>
-                <div class="card"><div class="icon-box"><i class="fa-solid fa-circle-check"></i></div><h3>Биокоррекция</h3><p>Тана биоритмларини тиклаш ва тўғрилаш.</p></div>
-                <div class="card"><div class="icon-box"><i class="fa-solid fa-circle-check"></i></div><h3>Мануал терапия</h3><p>Омуртқа ва бўғимлар ҳаракатчанлигини тиклаш.</p></div>
+            <div class="form-group">
+                <label>Исми Шарифингиз:</label>
+                <input type="text" id="patient-name" placeholder="Масалан: Анвар Каримов">
             </div>
+            <div class="form-group">
+                <label>Телефон ва Телеграм рақамингиз:</label>
+                <input type="tel" id="patient-phone" placeholder="+998 90 123 45 67" value="+998 ">
+            </div>
+            <div class="form-group">
+                <label>Қайси мутахассисга ёзиласиз?</label>
+                <select id="patient-doctor">
+                    <option value="1-Массажист">1-Массажист</option>
+                    <option value="2-Массажист">2-Массажист</option>
+                    <option value="3-Массажист">3-Массажист</option>
+                    <option value="Фарқи йўқ (Ким бўш бўлса)">Фарқи йўқ (Ким бўш бўлса)</option>
+                </select>
+            </div>
+            <button class="neon-btn" style="width: 100%; margin-top: 1rem;" onclick="submitBooking()">Қабулга ёзилиш</button>
         </section>
 
-        <section id="courses" style="margin-top: 3.5rem;">
-            <div class="section-title">
-                <h2>Хотин-қизлар учун ўқув курслари</h2>
-                <p>Масканимизда даволашдан ташқари касб ўрганиш курслари ҳам мавжуд</p>
-            </div>
-            <div class="grid">
-                <div class="card"><div class="icon-box" style="background: rgba(245, 158, 11, 0.15); color: var(--accent);"><i class="fa-solid fa-graduation-cap"></i></div><h3>Хижама курси</h3><p>Хижама сирларини профессионал даражада ўрганиб, амалиёт қилишни ўзлаштиринг.</p></div>
-                <div class="card"><div class="icon-box" style="background: rgba(245, 158, 11, 0.15); color: var(--accent);"><i class="fa-solid fa-graduation-cap"></i></div><h3>Апитерапия курси</h3><p>Асалари маҳсулотлари орқали даволаш усулларини мутахассислардан ўрганинг.</p></div>
-                <div class="card"><div class="icon-box" style="background: rgba(245, 158, 11, 0.15); color: var(--accent);"><i class="fa-solid fa-graduation-cap"></i></div><h3>Биокоррекция курси</h3><p>Организмни биокоррекция қилиш ва соғломлаштириш сирларини ўрганинг.</p></div>
-            </div>
-        </section>
-
-        <section id="news" style="margin-top: 3.5rem;">
+        <!-- Янгиликлар ва видеолар -->
+        <section id="news" style="margin-top: 4rem;">
             <div class="section-title">
                 <h2>Маъмурият янгиликлари ва видеолар</h2>
                 <p>Батафсил ўқиш учун хоҳлаган мақолани босинг</p>
@@ -242,10 +259,10 @@
         <p>&copy; 2026 Dr. Universal Соғломлаштириш ва Ўқув Маркази. Барча ҳуқуқлар ҳимояланган.</p>
     </footer>
 
-    <!-- Firebase ва Янгиликларни Юклаш Скрипти -->
+    <!-- Firebase va Asosiy Skriptlar -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        import { getDatabase, ref, onValue, push } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCZmmcH3NZfV0-KUtV3-vgrWm_NSuBqouc",
@@ -261,6 +278,67 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
+        // 1. Массажистларнинг ҳолатини реал вақтда ўқиб чиқариш
+        const doctorsRef = ref(db, 'doctors');
+        onValue(doctorsRef, (snapshot) => {
+            const doctors = snapshot.val();
+            const docContainer = document.getElementById('doctors-status-container');
+            
+            const docNames = {
+                doc1: "1-Массажист (Мануал)",
+                doc2: "2-Массажист (Хижама)",
+                doc3: "3-Массажист (Биокоррекция)"
+            };
+
+            docContainer.innerHTML = '';
+            
+            ['doc1', 'doc2', 'doc3'].forEach((key, index) => {
+                const doc = doctors && doctors[key] ? doctors[key] : { status: 'Бўш', note: 'Қабул қилишга тайёр' };
+                const isFree = doc.status === 'Бўш';
+                
+                docContainer.innerHTML += `
+                    <div class="doctor-card">
+                        <h3>${docNames[key]}</h3>
+                        <p style="color:#94a3b8; font-size:0.85rem; margin: 5px 0 10px 0;">${doc.note || ''}</p>
+                        <div class="status-badge ${isFree ? 'status-free' : 'status-busy'}">
+                            <i class="fa-solid ${isFree ? 'fa-circle-check' : 'fa-clock'}"></i> ${doc.status}
+                        </div>
+                    </div>
+                `;
+            });
+        });
+
+        // 2. Беморнинг қабулга ёзилиш сўровини Firebase'га юбориш
+        window.submitBooking = function() {
+            const name = document.getElementById('patient-name').value.trim();
+            const phone = document.getElementById('patient-phone').value.trim();
+            const doctor = document.getElementById('patient-doctor').value;
+
+            if (!name || phone.length < 9) {
+                alert('Илтимос, исм ва телефон рақамингизни тўлиқ киритинг!');
+                return;
+            }
+
+            const bookingData = {
+                name: name,
+                phone: phone,
+                doctor: doctor,
+                time: new Date().toLocaleString(),
+                status: 'Янги мурожаат'
+            };
+
+            push(ref(db, 'bookings'), bookingData)
+                .then(() => {
+                    alert('Аризангиз муваффақиятли қабул қилинди! Тез орада сиз билан боғланамиз.');
+                    document.getElementById('patient-name').value = '';
+                    document.getElementById('patient-phone').value = '+998 ';
+                })
+                .catch((error) => {
+                    alert('Хатолик юз берди: ' + error.message);
+                });
+        };
+
+        // 3. Янгиликларни ўқиб чиқариш
         const container = document.getElementById('dynamic-news-container');
         const postsRef = ref(db, 'posts');
 
@@ -277,17 +355,10 @@
 
             posts.reverse().forEach((post) => {
                 let previewMedia = '';
-                
-                // Текширув: Агар расм бўлса расмни, видео бўлса YouTube видео кўринишини чиқарамиз
                 if (post.type === 'image') {
                     previewMedia = `<img src="${post.content}" alt="Янгилик расми">`;
                 } else {
-                    // Видео uchun iframe yoki YouTube belgisi bilan chiroyli blok
-                    previewMedia = `
-                        <div style="background:#1e293b; height:180px; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#38bdf8; border-radius:10px; font-weight:600; border: 1px solid rgba(56,189,248,0.2);">
-                            <i class="fa-brands fa-youtube" style="font-size: 2.5rem; color: #ef4444; margin-bottom: 8px;"></i>
-                            <span>Видео лавҳа</span>
-                        </div>`;
+                    previewMedia = `<div style="background:#1e293b; height:160px; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#38bdf8; border-radius:10px; font-weight:600;"><i class="fa-brands fa-youtube" style="font-size: 2.5rem; color: #ef4444; margin-bottom: 8px;"></i><span>Видео лавҳа</span></div>`;
                 }
 
                 container.innerHTML += `
