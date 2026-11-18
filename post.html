@@ -36,31 +36,59 @@
         </div>
     </div>
 
-    <script>
+    <!-- Firebase SDK va Postni o'qish logikasi -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCZmmcH3NZfV0-KUtV3-vgrWm_NSuBqouc",
+            authDomain: "druniversal-1e65c.firebaseapp.com",
+            databaseURL: "https://druniversal-1e65c-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "druniversal-1e65c",
+            storageBucket: "druniversal-1e65c.firebasestorage.app",
+            messagingSenderId: "64653989178",
+            appId: "1:64653989178:web:5a2df8e7465efe97a2ec03",
+            measurementId: "G-VKSDLVSZXD"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
         window.addEventListener('DOMContentLoaded', () => {
             const params = new URLSearchParams(window.location.search);
             const postId = params.get('id');
-            const posts = JSON.parse(localStorage.getItem('dr_universal_posts')) || [];
             const box = document.getElementById('post-content-box');
 
-            if (postId !== null && posts[postId]) {
-                const post = posts[postId];
-                let mediaHtml = '';
-
-                if (post.type === 'image') {
-                    mediaHtml = `<div class="media-box"><img src="${post.content}" alt="Мақола расми"></div>`;
-                } else {
-                    mediaHtml = `<div class="media-box">${post.content}</div>`;
-                }
-
-                box.innerHTML = `
-                    <h1>${post.title}</h1>
-                    ${mediaHtml}
-                    <div class="post-text">${post.desc}</div>
-                `;
-            } else {
-                box.innerHTML = `<h2 style="color:#ef4444; text-align:center;">Кечирасиз, бундай мақола топилмади!</h2><p style="text-align:center; margin-top:1rem;"><a href="index.html" style="color:var(--primary);">Бош саҳифага қайтиш</a></p>`;
+            if (!postId) {
+                box.innerHTML = `<h2 style="color:#ef4444; text-align:center;">Мақола ID си топилмади!</h2><p style="text-align:center; margin-top:1rem;"><a href="index.html" style="color:var(--primary);">Бош саҳифага қайтиш</a></p>`;
+                return;
             }
+
+            // Firebase'dan berilgan ID bo'yicha postni izlaymiz
+            const postRef = ref(db, `posts/${postId}`);
+            get(postRef).then((snapshot) => {
+                if (snapshot.exists()) {
+                    const post = snapshot.val();
+                    let mediaHtml = '';
+
+                    if (post.type === 'image') {
+                        mediaHtml = `<div class="media-box"><img src="${post.content}" alt="Мақола расми"></div>`;
+                    } else {
+                        mediaHtml = `<div class="media-box" style="padding: 1rem; background: #0f172a;">${post.content}</div>`;
+                    }
+
+                    box.innerHTML = `
+                        <h1>${post.title}</h1>
+                        ${mediaHtml}
+                        <div class="post-text">${post.desc}</div>
+                    `;
+                } else {
+                    box.innerHTML = `<h2 style="color:#ef4444; text-align:center;">Кечирасиз, бундай мақола топилмади!</h2><p style="text-align:center; margin-top:1rem;"><a href="index.html" style="color:var(--primary);">Бош саҳифага қайтиш</a></p>`;
+                }
+            }).catch((error) => {
+                box.innerHTML = `<h2 style="color:#ef4444; text-align:center;">Хатолик юз берди!</h2><p style="text-align:center; color:#94a3b8;">${error.message}</p>`;
+            });
         });
     </script>
 </body>
