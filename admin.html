@@ -27,10 +27,9 @@
         .neon-btn { background: linear-gradient(135deg, #0284c7, #0d9488); color: #fff; padding: 12px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; width: 100%; text-transform: uppercase; transition: 0.3s; }
         .neon-btn:hover { opacity: 0.9; box-shadow: 0 0 15px rgba(56,189,248,0.5); }
         
-        /* Рўйхат элементлари стили */
         .posts-list { margin-top: 2.5rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.5rem; }
         .post-row { display: flex; justify-content: space-between; align-items: center; background: #0f172a; padding: 10px 15px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #334155; gap: 10px; }
-        .post-row span { font-size: 0.9rem; color: #cbd5e1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 350px; }
+        .post-row span { font-size: 0.9rem; color: #cbd5e1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 320px; }
         .action-btns { display: flex; gap: 6px; }
         .edit-btn { background: #f59e0b; color: #fff; border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; }
         .del-btn { background: #ef4444; color: #fff; border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; }
@@ -67,9 +66,10 @@
             <h2>Маъмурият Панели</h2>
             <button class="neon-btn" style="width: auto; padding: 6px 12px; font-size: 0.75rem; background: #ef4444;" onclick="logoutAdmin()">Чиқиш</button>
         </div>
-        <p style="color: #94a3b8; font-size: 0.85rem; margin-bottom: 1.5rem;">Сайтга янгилик қўшиш, уларни таҳрирлаш ёки ўчириш.</p>
+        <p style="color: #94a3b8; font-size: 0.85rem; margin-bottom: 1.5rem;">Сайтга янгилик қўшиш, таҳрирлаш ёки ўчириш.</p>
 
-        <input type="hidden" id="edit-index" value="-1">
+        <!-- Таҳрир қилинаётган постнинг ID сини сақлаб турадиган яширин майдон -->
+        <input type="hidden" id="edit-post-id" value="">
 
         <div class="form-group">
             <label>Мазмун тури:</label>
@@ -85,7 +85,7 @@
         </div>
 
         <div class="form-group" id="file-input-group">
-            <label>Расм файлини танлаш:</label>
+            <label>Расм файлини танлаш (таҳрирда янгиси танланмаса эскиси сақланади):</label>
             <input type="file" id="post-file" accept="image/*" style="background:none; border:none; padding:0;">
         </div>
 
@@ -101,11 +101,10 @@
 
         <button id="save-btn" class="neon-btn" onclick="savePost()">Сайтга чиқариш</button>
         
-        <!-- Мавжуд мақолалар рўйхати ва бошқарув -->
         <div class="posts-list">
             <h3 style="color:var(--primary); font-size:1.1rem; margin-bottom:1rem;">Мавжуд мақола ва видеолар:</h3>
             <div id="admin-posts-container">
-                <!-- JavaScript орқали рўйхат чиқади -->
+                <!-- Firebase орқали рўйхат чиқади -->
             </div>
         </div>
 
@@ -122,67 +121,48 @@
         </div>
     </div>
 
+    <!-- Firebase ва Админ Логикаси -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getDatabase, ref, push, set, onValue, remove, get } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
-
-    const firebaseConfig = {
-        apiKey: "AIzaSyCZmmcH3NZfV0-KUtV3-vgrWm_NSuBqouc",
-        authDomain: "druniversal-1e65c.firebaseapp.com",
-        databaseURL: "https://druniversal-1e65c-default-rtdb.europe-west1.firebasedatabase.app",
-        projectId: "druniversal-1e65c",
-        storageBucket: "druniversal-1e65c.firebasestorage.app",
-        messagingSenderId: "64653989178",
-        appId: "1:64653989178:web:5a2df8e7465efe97a2ec03",
-        measurementId: "G-VKSDLVSZXD"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
-
-    // Масалан, формани юбориш тугмаси ёки функцияси ичида:
-    window.saveNewPost = function(title, desc, type, content) {
-        const postData = {
-            title: title,
-            desc: desc,
-            type: type,
-            content: content,
-            timestamp: Date.now()
+        const firebaseConfig = {
+            apiKey: "AIzaSyCZmmcH3NZfV0-KUtV3-vgrWm_NSuBqouc",
+            authDomain: "druniversal-1e65c.firebaseapp.com",
+            databaseURL: "https://druniversal-1e65c-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "druniversal-1e65c",
+            storageBucket: "druniversal-1e65c.firebasestorage.app",
+            messagingSenderId: "64653989178",
+            appId: "1:64653989178:web:5a2df8e7465efe97a2ec03",
+            measurementId: "G-VKSDLVSZXD"
         };
 
-        push(ref(db, 'posts'), postData)
-            .then(() => {
-                alert("Янгилик муваффақиятли қўшилди ва барча қурилмаларга тарқатилди!");
-                // Формани тозалаш ёки бошқа саҳифага ўтиш
-            })
-            .error((error) => {
-                alert("Хатолик юз берди: " + error.message);
-            });
-    };
-
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
         const ALLOWED_PHONE = "+998501191146";
 
-        function verifyLogin() {
+        window.verifyLogin = function() {
             let inputPhone = document.getElementById('admin-phone').value.trim().replace(/\s+/g, '');
             if (inputPhone === ALLOWED_PHONE) {
                 document.getElementById('login-screen').style.display = 'none';
                 document.getElementById('dashboard-screen').style.display = 'block';
-                renderAdminPosts();
+                loadAdminPosts();
             } else {
                 document.getElementById('custom-popup').style.display = 'flex';
             }
-        }
+        };
 
-        function closePopup() { document.getElementById('custom-popup').style.display = 'none'; }
+        window.closePopup = function() { 
+            document.getElementById('custom-popup').style.display = 'none'; 
+        };
 
-        function logoutAdmin() {
+        window.logoutAdmin = function() {
             document.getElementById('dashboard-screen').style.display = 'none';
             document.getElementById('login-screen').style.display = 'block';
             document.getElementById('admin-phone').value = '+998 ';
-        }
+        };
 
-        function toggleMediaType() {
+        window.toggleMediaType = function() {
             const type = document.getElementById('media-type').value;
             if (type === 'image') {
                 document.getElementById('file-input-group').style.display = 'flex';
@@ -191,121 +171,138 @@
                 document.getElementById('file-input-group').style.display = 'none';
                 document.getElementById('iframe-input-group').style.display = 'flex';
             }
-        }
+        };
 
-        function renderAdminPosts() {
-            const container = document.getElementById('admin-posts-container');
-            const posts = JSON.parse(localStorage.getItem('dr_universal_posts')) || [];
-            
-            if (posts.length === 0) {
-                container.innerHTML = '<p style="color:#64748b; font-size:0.9rem;">Ҳозирча ҳеч қандай хабар йўқ.</p>';
-                return;
-            }
-
-            container.innerHTML = '';
-            posts.forEach((p, index) => {
-                container.innerHTML += `
-                    <div class="post-row">
-                        <span><b>${index + 1}.</b> ${p.title}</span>
-                        <div class="action-btns">
-                            <button class="edit-btn" onclick="editPost(${index})">Ўзгартириш</button>
-                            <button class="del-btn" onclick="deletePost(${index})">Ўчириш</button>
-                        </div>
-                    </div>
-                `;
-            });
-        }
-
-        function savePost() {
+        window.savePost = function() {
+            const editId = document.getElementById('edit-post-id').value;
             const type = document.getElementById('media-type').value;
             const title = document.getElementById('post-title').value.trim();
             const desc = document.getElementById('post-desc').value.trim();
             const fileInput = document.getElementById('post-file');
             const iframeCode = document.getElementById('post-iframe').value.trim();
-            const editIndex = parseInt(document.getElementById('edit-index').value);
 
             if (!title) {
                 alert('Илтимос, сарлавҳани киритинг!');
                 return;
             }
 
-            let posts = JSON.parse(localStorage.getItem('dr_universal_posts')) || [];
-
             if (type === 'image') {
                 const file = fileInput.files[0];
-                if (!file && editIndex === -1) {
-                    alert('Илтимос, расм танланг!');
-                    return;
-                }
-
                 if (file) {
                     const reader = new FileReader();
                     reader.onload = function(e) {
-                        saveDataToStorage(editIndex, { type: 'image', title, desc, content: e.target.result }, posts);
+                        saveOrUpdateFirebase(editId, { type: 'image', title, desc, content: e.target.result });
                     };
                     reader.readAsDataURL(file);
                 } else {
-                    // Агар таҳрир қилинаётган бўлса ва янги расм танланмаса, эски расмни сақлаб қоламиз
-                    let existingContent = editIndex !== -1 ? posts[editIndex].content : '';
-                    saveDataToStorage(editIndex, { type: 'image', title, desc, content: existingContent }, posts);
+                    if (editId) {
+                        // Agar tahrirlanayotgan bo'lsa va yangi rasm tanlanmasa, bazadagi eski rasmni saqlab qolamiz
+                        const postRef = ref(db, `posts/${editId}`);
+                        get(postRef).then((snapshot) => {
+                            const oldData = snapshot.val();
+                            saveOrUpdateFirebase(editId, { type: 'image', title, desc, content: oldData.content });
+                        });
+                    } else {
+                        alert('Илтимос, янги расм танланг!');
+                    }
                 }
             } else {
                 if (!iframeCode) {
                     alert('Илтимос, YouTube iframe кодини киритинг!');
                     return;
                 }
-                saveDataToStorage(editIndex, { type: 'video', title, desc, content: iframeCode }, posts);
+                saveOrUpdateFirebase(editId, { type: 'video', title, desc, content: iframeCode });
+            }
+        };
+
+        function saveOrUpdateFirebase(editId, postData) {
+            postData.timestamp = Date.now();
+
+            if (editId) {
+                // Mavjud postni yangilash (Edit)
+                set(ref(db, `posts/${editId}`), postData).then(() => {
+                    alert('Янгилик муваффақиятли янгиланди!');
+                    resetForm();
+                }).catch(err => alert('Хатолик: ' + err.message));
+            } else {
+                // Yangi post qo'shish
+                push(ref(db, 'posts'), postData).then(() => {
+                    alert('Янгилик муваффақиятли қўшилди!');
+                    resetForm();
+                }).catch(err => alert('Хатолик: ' + err.message));
             }
         }
 
-        function saveDataToStorage(index, postObj, posts) {
-            if (index === -1) {
-                posts.unshift(postObj);
-                alert('Янгилик муваффақиятли қўшилди!');
-            } else {
-                posts[index] = postObj;
-                document.getElementById('edit-index').value = -1;
-                document.getElementById('save-btn').textContent = 'Сайтга чиқариш';
-                alert('Янгилик муваффақиятли янгиланди!');
-            }
-
-            localStorage.setItem('dr_universal_posts', JSON.stringify(posts));
-            
-            // Формани тозалаш
+        function resetForm() {
+            document.getElementById('edit-post-id').value = '';
             document.getElementById('post-title').value = '';
             document.getElementById('post-desc').value = '';
             document.getElementById('post-file').value = '';
             document.getElementById('post-iframe').value = '';
-            renderAdminPosts();
+            document.getElementById('save-btn').textContent = 'Сайтга чиқариш';
         }
 
-        function editPost(index) {
-            const posts = JSON.parse(localStorage.getItem('dr_universal_posts')) || [];
-            const p = posts[index];
+        function loadAdminPosts() {
+            const container = document.getElementById('admin-posts-container');
+            const postsRef = ref(db, 'posts');
 
-            document.getElementById('edit-index').value = index;
-            document.getElementById('media-type').value = p.type;
-            toggleMediaType();
-            document.getElementById('post-title').value = p.title;
-            document.getElementById('post-desc').value = p.desc;
-            
-            if (p.type === 'video') {
-                document.getElementById('post-iframe').value = p.content;
-            }
+            onValue(postsRef, (snapshot) => {
+                const data = snapshot.val();
+                container.innerHTML = '';
 
-            document.getElementById('save-btn').textContent = 'Ўзгаришларни сақлаш';
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+                if (!data) {
+                    container.innerHTML = '<p style="color:#64748b; font-size:0.9rem;">Ҳозирча ҳеч қандай хабар йўқ.</p>';
+                    return;
+                }
+
+                const posts = Object.entries(data).map(([key, value]) => ({ id: key, ...value }));
+
+                posts.reverse().forEach((p, index) => {
+                    container.innerHTML += `
+                        <div class="post-row">
+                            <span><b>${index + 1}.</b> ${p.title}</span>
+                            <div class="action-btns">
+                                <button class="edit-btn" onclick="editPost('${p.id}')">Ўзгартириш</button>
+                                <button class="del-btn" onclick="deletePost('${p.id}')">Ўчириш</button>
+                            </div>
+                        </div>
+                    `;
+                });
+            });
         }
 
-        function deletePost(index) {
+        window.editPost = function(id) {
+            const postRef = ref(db, `posts/${id}`);
+            get(postRef).then((snapshot) => {
+                if (snapshot.exists()) {
+                    const p = snapshot.val();
+                    document.getElementById('edit-post-id').value = id;
+                    document.getElementById('media-type').value = p.type;
+                    toggleMediaType();
+                    document.getElementById('post-title').value = p.title;
+                    document.getElementById('post-desc').value = p.desc;
+                    
+                    if (p.type === 'video') {
+                        document.getElementById('post-iframe').value = p.content;
+                    }
+
+                    document.getElementById('save-btn').textContent = 'Ўзгаришларни сақлаш';
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+            });
+        };
+
+        window.deletePost = function(id) {
             if (confirm("Ушбу хабарни ўчириб ташлашни хоҳлайсизми?")) {
-                let posts = JSON.parse(localStorage.getItem('dr_universal_posts')) || [];
-                posts.splice(index, 1);
-                localStorage.setItem('dr_universal_posts', JSON.stringify(posts));
-                renderAdminPosts();
-                alert('Хабар ўчирилди!');
+                remove(ref(db, `posts/${id}`))
+                    .then(() => {
+                        alert('Хабар муваффақиятли ўчирилди!');
+                    })
+                    .catch((error) => {
+                        alert('Ўчиришда хатолик: ' + error.message);
+                    });
             }
-        }
+        };
     </script>
 </body>
 </html>

@@ -18,6 +18,7 @@
             --accent: #f59e0b;
         }
 
+        /* ХАТОЛИК ТУҒРИЛАНДИ: минус (-) белгиси ўрнига юлдузча (*) қўйилди */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; scroll-behavior: smooth; }
 
         body {
@@ -49,7 +50,6 @@
         }
         .neon-btn:hover { transform: scale(1.03); box-shadow: 0 0 25px rgba(56, 189, 248, 0.7); }
 
-        /* Картани мослашувчан ва чиройли қилиш */
         .mapoffice {
             width: 100%;
             max-width: 1200px;
@@ -148,7 +148,6 @@
         <a href="admin.html" class="neon-btn" style="font-size: 0.75rem; padding: 0.4rem 1rem; background: rgba(255,255,255,0.1);">Админ</a>
     </header>
 
-    <!-- Google Map (Манзил картаси ўлчами тўғриланди) -->
     <div class="mapoffice">
         <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d12043.703911844743!2d71.54957799999998!3d41.004993333333346!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x38bb35f2ebc7c52d%3A0x816ef67b29c23711!2sorzu%20city!5e0!3m2!1sru!2s!4v1794916736257!5m2!1sru!2s" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
     </div>
@@ -171,7 +170,6 @@
 
     <div class="container">
         
-        <!-- Касалликлар -->
         <section id="services">
             <div class="section-title">
                 <h2>Биз даволайдиган касалликлар</h2>
@@ -185,7 +183,6 @@
             </div>
         </section>
 
-        <!-- Даволаш турлари -->
         <section id="treatments" style="margin-top: 3.5rem;">
             <div class="section-title">
                 <h2>Асосий даволаш йўналишларимиз</h2>
@@ -199,7 +196,6 @@
             </div>
         </section>
 
-        <!-- Ўқув курслари -->
         <section id="courses" style="margin-top: 3.5rem;">
             <div class="section-title">
                 <h2>Хотин-қизлар учун ўқув курслари</h2>
@@ -212,14 +208,13 @@
             </div>
         </section>
 
-        <!-- Янгиликлар ва видеолар -->
         <section id="news" style="margin-top: 3.5rem;">
             <div class="section-title">
                 <h2>Маъмурият янгиликлари ва видеолар</h2>
                 <p>Батафсил ўқиш учун хоҳлаган мақолани босинг</p>
             </div>
             <div id="dynamic-news-container" class="dynamic-feed">
-                <!-- JavaScript орқали админдан киритилган мақолалар шу ерга чиқади -->
+                <!-- Firebase орқали янгиликлар шу ерга келиб тушади -->
             </div>
         </section>
 
@@ -247,43 +242,63 @@
         <p>&copy; 2026 Dr. Universal Соғломлаштириш ва Ўқув Маркази. Барча ҳуқуқлар ҳимояланган.</p>
     </footer>
 
+    <!-- Firebase ва Янгиликларни Юклаш Скрипти -->
     <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-    const firebaseConfig = {
-        apiKey: "AIzaSyCZmmcH3NZfV0-KUtV3-vgrWm_NSuBqouc",
-        authDomain: "druniversal-1e65c.firebaseapp.com",
-        databaseURL: "https://druniversal-1e65c-default-rtdb.europe-west1.firebasedatabase.app",
-        projectId: "druniversal-1e65c",
-        storageBucket: "druniversal-1e65c.firebasestorage.app",
-        messagingSenderId: "64653989178",
-        appId: "1:64653989178:web:5a2df8e7465efe97a2ec03",
-        measurementId: "G-VKSDLVSZXD"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
-
-    // Масалан, формани юбориш тугмаси ёки функцияси ичида:
-    window.saveNewPost = function(title, desc, type, content) {
-        const postData = {
-            title: title,
-            desc: desc,
-            type: type,
-            content: content,
-            timestamp: Date.now()
+        const firebaseConfig = {
+            apiKey: "AIzaSyCZmmcH3NZfV0-KUtV3-vgrWm_NSuBqouc",
+            authDomain: "druniversal-1e65c.firebaseapp.com",
+            databaseURL: "https://druniversal-1e65c-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "druniversal-1e65c",
+            storageBucket: "druniversal-1e65c.firebasestorage.app",
+            messagingSenderId: "64653989178",
+            appId: "1:64653989178:web:5a2df8e7465efe97a2ec03",
+            measurementId: "G-VKSDLVSZXD"
         };
 
-        push(ref(db, 'posts'), postData)
-            .then(() => {
-                alert("Янгилик муваффақиятли қўшилди ва барча қурилмаларга тарқатилди!");
-                // Формани тозалаш ёки бошқа саҳифага ўтиш
-            })
-            .error((error) => {
-                alert("Хатолик юз берди: " + error.message);
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        const container = document.getElementById('dynamic-news-container');
+        const postsRef = ref(db, 'posts');
+
+        onValue(postsRef, (snapshot) => {
+            const data = snapshot.val();
+            container.innerHTML = '';
+
+            if (!data) {
+                container.innerHTML = '<p style="color:#64748b; text-align:center; grid-column:1/-1;">Ҳозирча янгиликлар қўшилмади.</p>';
+                return;
+            }
+
+            const posts = Object.entries(data).map(([key, value]) => ({ id: key, ...value }));
+
+            posts.reverse().forEach((post) => {
+                let previewMedia = '';
+                
+                // Текширув: Агар расм бўлса расмни, видео бўлса YouTube видео кўринишини чиқарамиз
+                if (post.type === 'image') {
+                    previewMedia = `<img src="${post.content}" alt="Янгилик расми">`;
+                } else {
+                    // Видео uchun iframe yoki YouTube belgisi bilan chiroyli blok
+                    previewMedia = `
+                        <div style="background:#1e293b; height:180px; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#38bdf8; border-radius:10px; font-weight:600; border: 1px solid rgba(56,189,248,0.2);">
+                            <i class="fa-brands fa-youtube" style="font-size: 2.5rem; color: #ef4444; margin-bottom: 8px;"></i>
+                            <span>Видео лавҳа</span>
+                        </div>`;
+                }
+
+                container.innerHTML += `
+                    <a href="post.html?id=${post.id}" class="feed-card">
+                        ${previewMedia}
+                        <h4 style="margin-top: 10px;">${post.title}</h4>
+                        <p>${post.desc ? post.desc.substring(0, 80) : ''}...</p>
+                    </a>
+                `;
             });
-    };
-</script>
+        });
+    </script>
 </body>
 </html>
