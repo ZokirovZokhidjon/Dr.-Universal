@@ -1,99 +1,63 @@
-const TelegramBot = require('node-telegram-bot-api');
-
-const token = 'SIZNING_BOT_TOKENINGIZ';
-const bot = new TelegramBot(token, { polling: true });
-const ADMIN_CHAT_ID = 'SIZNING_TELEGRAM_IDINGIZ';
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-
-// Мутахассислар ҳолати (намуна маълумот — ўзингизнинг жадвал/база билан алмаштиришингиз мумкин)
-const specialists = [
-    { name: 'Зохиджон Зокиров', specialty: 'Мануал терапия / Массаж', status: 'Бугун соат 15:00 дан бўш' },
-    { name: 'Навбатчи мутахассис', specialty: 'Умумий қабул', status: 'Ҳозир банд' }
-];
-
-// 1. Мутахассислар ҳолати ҳақида қисқача маълумот тайёрлаш
-async function getSpecialistsSummary() {
-    const rawList = specialists
-        .map(s => `- ${s.name} (${s.specialty}): ${s.status}`)
-        .join('\n');
-
-    if (!GEMINI_API_KEY) {
-        return rawList;
+export default async function handler(req, res) {
+    if (req.method !== 'POST') {
+        return res.status(405).json({ error: 'Method not allowed' });
     }
+
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+        return res.status(500).json({ error: 'GEMINI_API_KEY созланмаган' });
+    }
+
+    const { question, doctors = [], history = [] } = req.body || {};
+    if (!question || !question.trim()) {
+        return res.status(400).json({ error: 'Савол киритилмади' });
+    }
+
+    const doctorsText = doctors.length
+        ? doctors.map(d => `- ${d.name}: ${d.status}${d.note ? ` (${d.note})` : ''}`).join('\n')
+        : 'Мутахассислар ҳолати ҳозирча кўрсатилмаган.';
+
+    const systemInstruction =
+        `Сен "Dr. Universal" соғломлаштириш ва ўқув марказининг онлайн маслаҳатчиси — доктор формасидаги хушмуомала қиз, Зинасан.\n` +
+        `Вазифанг:\n` +
+        `1) Фойдаланувчи билан худди жонли суҳбатдошдек самимий, тушунарли ва батафсил гаплаш. Салом берса, аввал хушмуомала алик ол ва ҳол-аҳвол сўра.\n` +
+        `2) Мутахассисларнинг бўш ёки бандлиги сўралсагина қуйидаги маълумотга таян:\n${doctorsText}\n` +
+        `3) Шикоят ёки савол берилса, фойдали йўналтирувчи маслаҳат бер (мануал терапия, хижама, биокоррекция ва қабулга тайёрланиш юзасидан).\n` +
+        `4) Аниқ тиббий ташхис қўйма, даволаш буюрма; маслаҳат охирида аниқ ташхис ва муолажани мутахассис белгилашини қисқа эслат.\n` +
+        `5) Жавобни табиий ва равон ўзбек тилида ёз.`;
+
+    const contents = [
+        ...history.slice(-6),
+        {
+            role: 'user',
+            parts: [{ text: question.trim() }]
+        }
+    ];
 
     try {
         const response = await fetch(
-            `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`,
+            `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
             {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    contents: [{
-                        parts: [{
-                            text: `Қуйидаги мутахассислар ҳолати асосида фойдаланувчига жуда қисқа, аниқ ва хушмуомала маълумот тайёрла (ўзбек тилида):\n${rawList}`
-                        }]
-                    }]
+                    system_instruction: {
+                        parts: [{ text: systemInstruction }]
+                    },
+                    contents
                 })
             }
         );
 
         const data = await response.json();
-        return data?.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || rawList;
+        const reply = data?.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+
+        if (!reply) {
+            return res.status(502).json({ error: 'Моделдан жавоб олинмади' });
+        }
+
+        return res.status(200).json({ reply });
     } catch (err) {
-        console.log('Мутахассислар маълумотида хатолик:', err.message);
-        return rawList;
+        return res.status(500).json({ error: err.message });
     }
-}
-
-// 2. Фойдаланувчига йўналтирувчи маслаҳат бериш
-async function getUserAdvice(userQuestion, doctorName = '') {
-    if (!GEMINI_API_KEY) {
-        return 'Қабул учун мутахассисга мурожаат қилишингизни тавсия этамиз.';
-    }
-
-    try {
-        const response = await fetch(
-            `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`,
-            {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    contents: [{
-                        parts: [{
-                            text: `Фойдаланувчи сўрови: "${userQuestion}". Танланган йўналиш: "${doctorName}". ` +
-                                  `Қисқа (3-4 гап) фойдали ва эҳтиёткор маслаҳат бер (ўзбек тилида). ` +
-                                  `Аниқ ташхис ёки муолажа буюрма, охирида мутахассис кўриги муҳимлигини эслат.`
-                        }]
-                    }]
-                })
-            }
-        );
-
-        const data = await response.json();
-        return data?.candidates?.[0]?.content?.parts?.[0]?.text?.trim() ||
-            'Мутахассис билан боғланиб, ҳолатингизни батафсил тушунтиришингизни тавсия этамиз.';
-    } catch (err) {
-        console.log('Маслаҳат олишда хатолик:', err.message);
-        return 'Ҳозирча маслаҳат олиш имкони бўлмади, лекин қабулга ёзилишингиз мумкин.';
-    }
-}
-
-// Қабулга ёзилганда админга хабар + AI маслаҳат
-async function notifyAdminAboutBooking(patientName, patientPhone, doctorName, patientNote = '') {
-    const advice = patientNote ? await getUserAdvice(patientNote, doctorName) : '';
-
-    let message =
-        `🚨 *ЯНГИ ҚАБУЛГА ЁЗИЛИШ!*\n\n` +
-        `👤 Бемор: ${patientName}\n` +
-        `📞 Тел/Телеграм: ${patientPhone}\n` +
-        `👨‍⚕️ Танлови: ${doctorName}\n` +
-        `⏰ Вақти: ${new Date().toLocaleString()}`;
-
-    if (advice) {
-        message += `\n\n💡 *AI йўналтирувчи маслаҳат:* ${advice}`;
-    }
-
-    bot.sendMessage(ADMIN_CHAT_ID, message, { parse_mode: 'Markdown' })
-        .then(() => console.log('Админга хабар юборилди!'))
-        .catch((error) => console.log('Хатолик юз берди:', error.code));
 }
