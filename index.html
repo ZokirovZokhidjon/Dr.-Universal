@@ -9,126 +9,158 @@
     
     <style>
         :root {
-            --primary: #38bdf8;
+            --primary: #0284c7;
             --secondary: #0d9488;
-            --dark-bg: #090d16;
-            --card-bg: rgba(15, 23, 42, 0.75);
-            --border-glow: rgba(56, 189, 248, 0.3);
-            --text-light: #f8fafc;
-            --accent: #f59e0b;
+            --light-bg: #f1f5f9;
+            --card-bg: #ffffff;
+            --border-soft: #cbd5e1;
+            --text-dark: #0f172a;
+            --text-muted: #475569;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; scroll-behavior: smooth; }
 
         body {
-            background-color: var(--dark-bg);
-            color: var(--text-light);
-            background-image: radial-gradient(circle at 20% 20%, rgba(2, 132, 199, 0.15) 0%, transparent 40%),
-                              radial-gradient(circle at 80% 80%, rgba(13, 148, 136, 0.15) 0%, transparent 40%);
+            background-color: var(--light-bg);
+            color: var(--text-dark);
+            background-image: linear-gradient(180deg, #e0f2fe 0%, #f8fafc 35%, #f1f5f9 100%);
             min-height: 100vh;
         }
 
         header {
             display: flex; justify-content: space-between; align-items: center;
-            padding: 1rem 5%; background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(12px);
-            position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid rgba(255,255,255,0.08);
+            padding: 0.9rem 5%; background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(10px);
+            position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid var(--border-soft);
         }
 
-        .logo { display: flex; align-items: center; gap: 12px; text-decoration: none; color: #fff; font-weight: 800; font-size: 1.3rem; }
-        .logo img { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary); }
+        .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text-dark); font-weight: 800; font-size: 1.25rem; }
+        .logo img { width: 42px; height: 42px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary); }
 
-        .nav-links { display: flex; gap: 1.5rem; list-style: none; }
-        .nav-links a { text-decoration: none; color: #cbd5e1; font-weight: 600; font-size: 0.9rem; transition: 0.3s; }
+        .nav-links { display: flex; gap: 1.4rem; list-style: none; }
+        .nav-links a { text-decoration: none; color: #334155; font-weight: 600; font-size: 0.88rem; transition: 0.25s; }
         .nav-links a:hover { color: var(--primary); }
 
         .neon-btn {
             background: linear-gradient(135deg, #0284c7, #0d9488);
-            color: #fff; padding: 0.6rem 1.4rem; border-radius: 50px; text-decoration: none;
-            font-weight: 600; font-size: 0.85rem; box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
-            transition: 0.3s; border: 1px solid rgba(255,255,255,0.2); display: inline-block; text-align: center; cursor: pointer;
+            color: #fff; padding: 0.55rem 1.2rem; border-radius: 50px; text-decoration: none;
+            font-weight: 600; font-size: 0.84rem; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25);
+            transition: 0.25s; border: none; display: inline-block; text-align: center; cursor: pointer;
         }
-        .neon-btn:hover { transform: scale(1.03); box-shadow: 0 0 25px rgba(56, 189, 248, 0.7); }
+        .neon-btn:hover { transform: translateY(-1px); opacity: 0.96; }
 
-        .mapoffice { width: 100%; max-width: 1200px; margin: 2rem auto 0 auto; padding: 0 2rem; }
-        .mapoffice iframe { width: 100%; height: 320px; border-radius: 16px; border: 1px solid var(--border-glow); box-shadow: 0 8px 30px rgba(0,0,0,0.4); }
+        .mapoffice { width: 100%; max-width: 1140px; margin: 1.5rem auto 0 auto; padding: 0 1.5rem; }
+        .mapoffice iframe { width: 100%; height: 290px; border-radius: 16px; border: 1px solid var(--border-soft); box-shadow: 0 6px 20px rgba(15, 23, 42, 0.08); }
 
-        .hero { padding: 3rem 5%; display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 2rem; align-items: center; }
-        .hero-content { background: var(--card-bg); backdrop-filter: blur(16px); padding: 2rem; border-radius: 20px; border: 1px solid var(--border-glow); box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
-        .hero-content h1 { font-size: 2.2rem; margin-bottom: 1rem; line-height: 1.2; }
+        .hero { padding: 2rem 5%; max-width: 1140px; margin: 0 auto; display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 1.5rem; align-items: center; }
+        .hero-content { background: var(--card-bg); padding: 1.8rem; border-radius: 18px; border: 1px solid var(--border-soft); box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06); }
+        .hero-content h1 { font-size: 2rem; margin-bottom: 0.8rem; line-height: 1.25; color: var(--text-dark); }
         .hero-content h1 span { color: var(--primary); }
-        .hero-content p { color: #94a3b8; margin-bottom: 1.5rem; font-size: 0.95rem; }
+        .hero-content p { color: var(--text-muted); margin-bottom: 1.2rem; font-size: 0.95rem; }
 
-        .sidebar-menu-box { display: flex; flex-direction: column; gap: 10px; }
+        .sidebar-menu-box { display: flex; flex-direction: column; gap: 8px; }
         .menu-item-btn {
             display: flex; justify-content: space-between; align-items: center;
-            background: rgba(30, 41, 59, 0.8); border: 1px solid rgba(255,255,255,0.1);
-            padding: 10px 18px; border-radius: 50px; color: #fff; text-decoration: none;
-            font-weight: 600; font-size: 0.9rem; transition: 0.3s; box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            background: #ffffff; border: 1px solid var(--border-soft);
+            padding: 9px 16px; border-radius: 50px; color: var(--text-dark); text-decoration: none;
+            font-weight: 600; font-size: 0.88rem; transition: 0.25s; box-shadow: 0 3px 10px rgba(15, 23, 42, 0.04);
         }
         .menu-item-btn:hover {
             background: linear-gradient(90deg, #0284c7, #0d9488);
-            border-color: var(--primary); box-shadow: 0 0 20px rgba(56,189,248,0.5);
-            transform: translateX(5px);
+            color: #fff; border-color: transparent;
         }
         .menu-item-btn i { margin-right: 8px; color: var(--primary); }
+        .menu-item-btn:hover i { color: #fff; }
 
-        .container { max-width: 1200px; margin: 0 auto; padding: 3rem 2rem; }
-        .section-title { text-align: center; margin-bottom: 2.5rem; }
-        .section-title h2 { font-size: 1.8rem; color: #fff; margin-bottom: 0.4rem; }
-        .section-title p { color: #94a3b8; font-size: 0.9rem; }
+        .container { max-width: 1140px; margin: 0 auto; padding: 1.5rem; }
+        .section-title { text-align: center; margin-bottom: 1.5rem; }
+        .section-title h2 { font-size: 1.65rem; color: var(--text-dark); margin-bottom: 0.3rem; }
+        .section-title p { color: var(--text-muted); font-size: 0.88rem; }
 
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; }
-        .card {
-            background: var(--card-bg); border: 1px solid var(--border-glow); padding: 1.5rem;
-            border-radius: 16px; backdrop-filter: blur(10px); transition: 0.3s; box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+        .doctors-status-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.2rem; margin-bottom: 2rem; }
+        .doctor-card { background: var(--card-bg); border: 1px solid var(--border-soft); padding: 1.2rem; border-radius: 16px; text-align: center; box-shadow: 0 6px 18px rgba(15, 23, 42, 0.05); }
+        .doctor-card h3 { color: var(--text-dark); margin-bottom: 0.35rem; font-size: 1.05rem; }
+        .status-badge { display: inline-block; padding: 5px 12px; border-radius: 50px; font-weight: 700; font-size: 0.8rem; margin-top: 6px; }
+        .status-free { background: #dcfce7; color: #15803d; border: 1px solid #86efac; }
+        .status-busy { background: #fee2e2; color: #b91c1c; border: 1px solid #fca5a5; }
+
+        /* Ихчам Зина AI бўлими */
+        .ai-doctor-compact {
+            max-width: 720px;
+            margin: 1rem auto 2rem auto;
+            background: #ffffff;
+            border-radius: 16px;
+            border: 1px solid #bae6fd;
+            box-shadow: 0 8px 24px rgba(2, 132, 199, 0.1);
+            padding: 1rem 1.2rem;
         }
-        .card:hover { transform: translateY(-5px); border-color: var(--primary); box-shadow: 0 12px 40px rgba(56,189,248,0.2); }
-        .icon-box { width: 45px; height: 45px; background: rgba(56, 189, 248, 0.15); color: var(--primary); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; margin-bottom: 1rem; }
-        .card h3 { font-size: 1.1rem; margin-bottom: 0.5rem; color: #fff; }
-        .card p { color: #94a3b8; font-size: 0.85rem; }
+        .ai-top-bar {
+            display: flex; align-items: center; gap: 12px;
+            padding-bottom: 0.7rem; border-bottom: 1px solid #e2e8f0;
+        }
+        .zina-avatar {
+            width: 58px; height: 58px; border-radius: 50%; object-fit: cover;
+            border: 2px solid var(--primary); flex-shrink: 0; background: #e0f2fe;
+        }
+        .zina-info h3 { font-size: 1rem; color: var(--text-dark); font-weight: 700; }
+        .zina-info p { font-size: 0.78rem; color: var(--text-muted); margin-top: 2px; }
+        .ai-chips { display: flex; gap: 6px; flex-wrap: wrap; margin: 0.65rem 0; }
+        .ai-chip {
+            background: #f0f9ff; color: #0369a1; border: 1px solid #bae6fd;
+            padding: 4px 10px; border-radius: 50px; font-size: 0.75rem; font-weight: 600;
+            cursor: pointer; transition: 0.2s;
+        }
+        .ai-chip:hover { background: var(--primary); color: #fff; }
+        .ai-messages {
+            background: #f8fafc; border: 1px solid #e2e8f0;
+            border-radius: 12px; padding: 0.65rem;
+            height: 135px; overflow-y: auto;
+            display: flex; flex-direction: column; gap: 7px; margin-bottom: 0.65rem;
+        }
+        .msg-bubble { padding: 7px 11px; border-radius: 10px; font-size: 0.83rem; line-height: 1.38; max-width: 88%; white-space: pre-line; }
+        .msg-bubble.bot { background: #e0f2fe; color: #0f172a; align-self: flex-start; }
+        .msg-bubble.user { background: #0f766e; color: #ffffff; align-self: flex-end; }
+        .ai-form-row { display: flex; gap: 8px; }
+        .ai-form-row input {
+            flex: 1; background: #ffffff; border: 1px solid #cbd5e1; color: var(--text-dark);
+            padding: 8px 12px; border-radius: 10px; font-size: 0.85rem;
+        }
 
-        /* Массажистларнинг ҳолати (Бўш/Банд эканлиги) блоклари */
-        .doctors-status-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 3rem; }
-        .doctor-card { background: var(--card-bg); border: 1px solid var(--border-glow); padding: 1.5rem; border-radius: 16px; text-align: center; backdrop-filter: blur(10px); }
-        .doctor-card h3 { color: #fff; margin-bottom: 0.5rem; }
-        .status-badge { display: inline-block; padding: 6px 14px; border-radius: 50px; font-weight: 700; font-size: 0.85rem; margin-top: 8px; }
-        .status-free { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); }
-        .status-busy { background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.4); }
+        .booking-section { background: var(--card-bg); border: 1px solid var(--border-soft); padding: 2rem; border-radius: 18px; max-width: 580px; margin: 2rem auto 0 auto; box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06); }
+        .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 1rem; }
+        .form-group label { font-size: 0.88rem; color: #334155; font-weight: 600; }
+        .form-group input, .form-group select { background: #f8fafc; border: 1px solid #cbd5e1; color: var(--text-dark); padding: 10px 12px; border-radius: 8px; font-family: inherit; font-size: 0.95rem; }
 
-        /* Қабулга ёзилиш формаси */
-        .booking-section { background: var(--card-bg); border: 1px solid var(--border-glow); padding: 2.5rem; border-radius: 20px; max-width: 600px; margin: 3rem auto 0 auto; backdrop-filter: blur(15px); }
-        .form-group { display: flex; flex-direction: column; gap: 8px; margin-bottom: 1.2rem; }
-        .form-group label { font-size: 0.9rem; color: #cbd5e1; font-weight: 600; }
-        .form-group input, .form-group select { background: #0f172a; border: 1px solid #334155; color: #fff; padding: 12px; border-radius: 8px; font-family: inherit; font-size: 1rem; }
-
-        .dynamic-feed { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
+        .dynamic-feed { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.2rem; margin-top: 1.5rem; }
         .feed-card {
-            background: var(--card-bg); border: 1px solid var(--border-glow); border-radius: 16px; overflow: hidden; padding: 1rem;
-            cursor: pointer; transition: 0.3s; text-decoration: none; display: block;
+            background: var(--card-bg); border: 1px solid var(--border-soft); border-radius: 14px; overflow: hidden; padding: 0.9rem;
+            cursor: pointer; transition: 0.25s; text-decoration: none; display: block; box-shadow: 0 4px 14px rgba(15, 23, 42, 0.04);
         }
-        .feed-card:hover { transform: translateY(-5px); border-color: var(--primary); box-shadow: 0 10px 30px rgba(56,189,248,0.3); }
-        .feed-card img { width: 100%; height: 180px; object-fit: cover; border-radius: 10px; }
-        .feed-card h4 { color: #fff; margin: 10px 0 5px 0; font-size: 1rem; }
-        .feed-card p { color: #94a3b8; font-size: 0.85rem; }
+        .feed-card:hover { transform: translateY(-3px); border-color: var(--primary); }
+        .feed-card img { width: 100%; height: 165px; object-fit: cover; border-radius: 10px; }
+        .feed-card h4 { color: var(--text-dark); margin: 8px 0 4px 0; font-size: 0.98rem; }
+        .feed-card p { color: var(--text-muted); font-size: 0.83rem; }
 
         .contact-section {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;
-            background: rgba(15, 23, 42, 0.9); border: 1px solid var(--border-glow);
-            padding: 2.5rem; border-radius: 20px; margin-top: 3rem; backdrop-filter: blur(15px);
+            display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;
+            background: var(--card-bg); border: 1px solid var(--border-soft);
+            padding: 2rem; border-radius: 18px; margin-top: 2.5rem; box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
         }
+        .contact-section h2 { color: var(--text-dark); margin-bottom: 0.5rem; }
+        .contact-section p { color: var(--text-muted); }
         .telegram-box {
             display: flex; flex-direction: column; justify-content: center; align-items: center;
-            background: rgba(30, 41, 59, 0.7); padding: 1.8rem; border-radius: 16px; text-align: center; border: 1px solid #334155;
+            background: #f8fafc; padding: 1.5rem; border-radius: 14px; text-align: center; border: 1px solid #e2e8f0;
         }
 
-        footer { text-align: center; padding: 2rem; color: #64748b; font-size: 0.85rem; border-top: 1px solid rgba(255,255,255,0.05); margin-top: 2rem; }
-        .license-badge { display: inline-block; background: rgba(56,189,248,0.15); color: var(--primary); padding: 0.4rem 1rem; border-radius: 50px; font-weight: 700; margin-bottom: 0.8rem; border: 1px solid var(--border-glow); }
+        footer { text-align: center; padding: 1.8rem; color: #64748b; font-size: 0.84rem; border-top: 1px solid #e2e8f0; margin-top: 2rem; background: #ffffff; }
+        .license-badge { display: inline-block; background: #e0f2fe; color: #0369a1; padding: 0.35rem 0.9rem; border-radius: 50px; font-weight: 700; margin-bottom: 0.6rem; border: 1px solid #bae6fd; }
 
         @media (max-width: 900px) {
-            .hero { grid-template-columns: 1fr; padding: 2rem 4%; }
-            .contact-section { grid-template-columns: 1fr; padding: 1.5rem; }
+            .hero { grid-template-columns: 1fr; padding: 1.5rem 4%; }
+            .contact-section { grid-template-columns: 1fr; padding: 1.2rem; }
             .nav-links { display: none; }
             .mapoffice { padding: 0 1rem; }
+            .ai-form-row { flex-direction: column; }
         }
     </style>
 </head>
@@ -136,18 +168,17 @@
 
     <header>
         <a href="#" class="logo">
-            <img src="logo.jpg" alt="Dr. Universal">
+            <img src="logo.jpg" alt="Dr. Universal" onerror="this.style.display='none'">
             <span>Dr. Universal</span>
         </a>
         <ul class="nav-links">
             <li><a href="#about">Биз ҳақимизда</a></li>
-            <li><a href="#services">Касалликлар</a></li>
-            <li><a href="#treatments">Даволаш</a></li>
             <li><a href="#doctors">Мутахассислар</a></li>
+            <li><a href="#ai-assistant">Зина (AI)</a></li>
             <li><a href="#booking">Қабулга ёзилиш</a></li>
             <li><a href="#news">Янгиликлар</a></li>
         </ul>
-        <a href="admin.html" class="neon-btn" style="font-size: 0.75rem; padding: 0.4rem 1rem; background: rgba(255,255,255,0.1);">Админ</a>
+        <a href="admin.html" class="neon-btn" style="font-size: 0.75rem; padding: 0.45rem 1rem;">Админ</a>
     </header>
 
     <div class="mapoffice">
@@ -158,13 +189,12 @@
         <div class="hero-content">
             <h1>Соғлиғингизни <span>Dr. Universal</span> билан тикланг!</h1>
             <p>Тажрибали мутахассислар ва табиий даволаш усуллари орқали оғриқлардан халос бўлинг.</p>
-            <a href="#booking" class="neon-btn"><i class="fa-solid fa-paper-plane" style="margin-right: 8px;"></i> Қабулга ёзилиш</a>
+            <a href="#booking" class="neon-btn"><i class="fa-solid fa-paper-plane" style="margin-right: 6px;"></i> Қабулга ёзилиш</a>
         </div>
         
         <div class="sidebar-menu-box">
-            <a href="#services" class="menu-item-btn"><span style="display:flex;align-items:center;"><i class="fa-solid fa-stethoscope"></i> Касалликлар</span> <i class="fa-solid fa-chevron-right" style="font-size:0.8rem;"></i></a>
-            <a href="#treatments" class="menu-item-btn"><span style="display:flex;align-items:center;"><i class="fa-solid fa-hand-holding-medical"></i> Даволаш турлари</span> <i class="fa-solid fa-chevron-right" style="font-size:0.8rem;"></i></a>
             <a href="#doctors" class="menu-item-btn"><span style="display:flex;align-items:center;"><i class="fa-solid fa-user-doctor"></i> Массажистлар ҳолати</span> <i class="fa-solid fa-chevron-right" style="font-size:0.8rem;"></i></a>
+            <a href="#ai-assistant" class="menu-item-btn"><span style="display:flex;align-items:center;"><i class="fa-solid fa-user-nurse"></i> Зина — AI маслаҳатчи</span> <i class="fa-solid fa-chevron-right" style="font-size:0.8rem;"></i></a>
             <a href="#booking" class="menu-item-btn"><span style="display:flex;align-items:center;"><i class="fa-solid fa-calendar-check"></i> Онлайн Навбатга ёзилиш</span> <i class="fa-solid fa-chevron-right" style="font-size:0.8rem;"></i></a>
             <a href="#news" class="menu-item-btn"><span style="display:flex;align-items:center;"><i class="fa-solid fa-photo-film"></i> Янгиликлар ва Видеолар</span> <i class="fa-solid fa-chevron-right" style="font-size:0.8rem;"></i></a>
         </div>
@@ -172,35 +202,63 @@
 
     <div class="container">
         
-        <!-- Мутахассисларнинг ҳолати (Бўш ёки Банд эканлиги кўринадиган қисм) -->
-        <section id="doctors" style="margin-top: 2rem;">
+        <section id="doctors">
             <div class="section-title">
                 <h2>Мутахассисларимиз вақти ва ҳолати</h2>
                 <p>Қайси массажистимиз бўш эканини кузатиб боринг</p>
             </div>
             <div class="doctors-status-grid" id="doctors-status-container">
-                <!-- JavaScript орқали Firebase'дан янгиланиб туради -->
                 <div class="doctor-card">
                     <h3>1-Массажист</h3>
-                    <p style="color:#94a3b8; font-size:0.9rem;">Мануал терапевт</p>
+                    <p style="color:#475569; font-size:0.88rem;">Мануал терапевт</p>
                     <div class="status-badge status-free">Юкланмоқда...</div>
                 </div>
                 <div class="doctor-card">
                     <h3>2-Массажист</h3>
-                    <p style="color:#94a3b8; font-size:0.9rem;">Хижама мутахассиси</p>
+                    <p style="color:#475569; font-size:0.88rem;">Хижама мутахассиси</p>
                     <div class="status-badge status-free">Юкланмоқда...</div>
                 </div>
                 <div class="doctor-card">
                     <h3>3-Массажист</h3>
-                    <p style="color:#94a3b8; font-size:0.9rem;">Биокоррекция</p>
+                    <p style="color:#475569; font-size:0.88rem;">Биокоррекция</p>
                     <div class="status-badge status-free">Юкланмоқда...</div>
                 </div>
             </div>
         </section>
 
-        <!-- Беморлар қабул учун ёзиладиган форма -->
+        <!-- Ихчам Зина AI бўлими -->
+        <section id="ai-assistant" class="ai-doctor-compact">
+            <div class="ai-top-bar">
+                <img
+                    src="zina.jpg"
+                    alt="Зина"
+                    class="zina-avatar"
+                    onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22120%22 height=%22120%22 viewBox=%220 0 120 120%22><rect width=%22120%22 height=%22120%22 rx=%2260%22 fill=%22%23e0f2fe%22/><circle cx=%2260%22 cy=%2245%22 r=%2222%22 fill=%22%230284c7%22/><path d=%22M24 102c4-20 20-32 36-32s32 12 36 32%22 fill=%22%230d9488%22/></svg>';"
+                >
+                <div class="zina-info">
+                    <h3>Зина — Доктор ёрдамчи (AI)</h3>
+                    <p>Мутахассислар ҳолатини айтади ва йўналтирувчи маслаҳат беради</p>
+                </div>
+            </div>
+
+            <div class="ai-chips">
+                <button type="button" class="ai-chip" onclick="askQuickStatus()">Ким бўш?</button>
+                <button type="button" class="ai-chip" onclick="askQuickAdvice('Бел ва бўйинда зўриқиш бор, қайси мутахассис маъқул?')">Бел ва бўйин</button>
+                <button type="button" class="ai-chip" onclick="askQuickAdvice('Қабулга қандай тайёрланай?')">Тайёргарлик</button>
+            </div>
+
+            <div class="ai-messages" id="ai-chat-box">
+                <div class="msg-bubble bot">Салом! Мен <b>Зина</b>. Мутахассисларимизнинг бўш ёки бандлигини сўрашингиз ёки қисқа йўналтирувчи маслаҳат олишингиз мумкин.</div>
+            </div>
+
+            <div class="ai-form-row">
+                <input type="text" id="ai-question-input" placeholder="Зинага савол ёки шикоятингизни ёзинг...">
+                <button type="button" class="neon-btn" onclick="handleDoctorAiAsk()">Юбориш</button>
+            </div>
+        </section>
+
         <section id="booking" class="booking-section">
-            <div class="section-title" style="margin-bottom: 1.5rem;">
+            <div class="section-title" style="margin-bottom: 1.2rem;">
                 <h2>Қабул учун ёзилиш</h2>
                 <p>Маълумотларингизни қолдиринг, биз сиз билан боғланамиз</p>
             </div>
@@ -221,32 +279,31 @@
                     <option value="Фарқи йўқ (Ким бўш бўлса)">Фарқи йўқ (Ким бўш бўлса)</option>
                 </select>
             </div>
-            <button class="neon-btn" style="width: 100%; margin-top: 1rem;" onclick="submitBooking()">Қабулга ёзилиш</button>
+            <button class="neon-btn" style="width: 100%; margin-top: 0.6rem;" onclick="submitBooking()">Қабулга ёзилиш</button>
         </section>
 
-        <!-- Янгиликлар ва видеолар -->
-        <section id="news" style="margin-top: 4rem;">
+        <section id="news" style="margin-top: 3rem;">
             <div class="section-title">
                 <h2>Маъмурият янгиликлари ва видеолар</h2>
                 <p>Батафсил ўқиш учун хоҳлаган мақолани босинг</p>
             </div>
-            <div id="dynamic-news-container" class="dynamic-feed">
-                <!-- Firebase орқали янгиликлар шу ерга келиб тушади -->
-            </div>
+            <div id="dynamic-news-container" class="dynamic-feed"></div>
         </section>
 
         <section class="contact-section" id="contact">
             <div>
                 <h2>Шифокор қабулига ёзилинг</h2>
                 <p>Тезкор тарзда навбатга ёзилишингиз ёки саволларингизни йўллашингиз мумкин.</p>
-                <p style="margin-top: 1.2rem;"><i class="fa-solid fa-phone" style="color: var(--primary); margin-right: 8px;">Телефон ва телеграмм <b>+998 90 797 11 46</b></i></p>
-                <p style="margin-top: 1.2rem;"><i  ; margin-right: 8px;"><button style="background-color: #cbd5e1;">  <a href="https://t.me/+7KpFb9OurFIzZDYy">Телеграм гурухимиз</a><br></button></p>
-                <p style="margin-top: 0.4rem;"><i class="fa-solid fa-location-dot" style="color: var(--primary); margin-right: 8px;"></i> Наманган ш, "Орзу" МФЙ, "Орзу сити" 6-уй Мўлжал "Диёр" дўконини орқа томонида "Физиотерапия" бўлимида</p>
+                <p style="margin-top: 1rem;"><i class="fa-solid fa-phone" style="color: var(--primary); margin-right: 8px;"></i> Телефон ва телеграм: <b>+998 90 797 11 46</b></p>
+                <p style="margin-top: 1rem;">
+                    <a href="https://t.me/+7KpFb9OurFIzZDYy" target="_blank" class="neon-btn" style="background: #334155;">Телеграм гуруҳимиз</a>
+                </p>
+                <p style="margin-top: 0.8rem;"><i class="fa-solid fa-location-dot" style="color: var(--primary); margin-right: 8px;"></i> Наманган ш, "Орзу" МФЙ, "Орзу сити" 6-уй Мўлжал "Диёр" дўконини орқа томонида "Физиотерапия" бўлимида</p>
             </div>
             <div class="telegram-box">
-                <i class="fa-brands fa-telegram" style="font-size: 3rem; color: #24A1DE; margin-bottom: 0.6rem;"></i>
-                <h3 style="margin-bottom: 0.3rem; color: #fff;">Онлайн қабулга ёзилиш</h3>
-                <p style="color: #94a3b8; margin-bottom: 1rem; font-size: 0.85rem;">Бот орқали қулай ва тез рўйхатдан ўтинг</p>
+                <i class="fa-brands fa-telegram" style="font-size: 2.8rem; color: #24A1DE; margin-bottom: 0.5rem;"></i>
+                <h3 style="margin-bottom: 0.25rem; color: var(--text-dark);">Онлайн қабулга ёзилиш</h3>
+                <p style="color: var(--text-muted); margin-bottom: 0.9rem; font-size: 0.85rem;">Бот орқали қулай ва тез рўйхатдан ўтинг</p>
                 <a href="https://t.me/druniversal_bot" target="_blank" class="neon-btn" style="width: 100%;">
                     <i class="fa-solid fa-paper-plane" style="margin-right: 6px;"></i> Телеграм ботга ўтиш
                 </a>
@@ -260,7 +317,6 @@
         <p>&copy; 2026 Dr. Universal Соғломлаштириш ва Ўқув Маркази. Барча ҳуқуқлар ҳимояланган.</p>
     </footer>
 
-    <!-- Firebase va Asosiy Skriptlar -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getDatabase, ref, onValue, push } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
@@ -279,28 +335,35 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        // 1. Массажистларнинг ҳолатини реал вақтда ўқиб чиқариш
+        let currentDoctorsList = [];
+        let chatHistory = [];
+
+        const docNames = {
+            doc1: "1-Массажист (Мануал)",
+            doc2: "2-Массажист (Хижама)",
+            doc3: "3-Массажист (Биокоррекция)"
+        };
+
         const doctorsRef = ref(db, 'doctors');
         onValue(doctorsRef, (snapshot) => {
             const doctors = snapshot.val();
             const docContainer = document.getElementById('doctors-status-container');
-            
-            const docNames = {
-                doc1: "1-Массажист (Мануал)",
-                doc2: "2-Массажист (Хижама)",
-                doc3: "3-Массажист (Биокоррекция)"
-            };
-
             docContainer.innerHTML = '';
-            
-            ['doc1', 'doc2', 'doc3'].forEach((key, index) => {
+            currentDoctorsList = [];
+
+            ['doc1', 'doc2', 'doc3'].forEach((key) => {
                 const doc = doctors && doctors[key] ? doctors[key] : { status: 'Бўш', note: 'Қабул қилишга тайёр' };
                 const isFree = doc.status === 'Бўш';
-                
+                currentDoctorsList.push({
+                    name: docNames[key],
+                    status: doc.status || 'Бўш',
+                    note: doc.note || ''
+                });
+
                 docContainer.innerHTML += `
                     <div class="doctor-card">
                         <h3>${docNames[key]}</h3>
-                        <p style="color:#94a3b8; font-size:0.85rem; margin: 5px 0 10px 0;">${doc.note || ''}</p>
+                        <p style="color:#475569; font-size:0.85rem; margin: 4px 0 8px 0;">${doc.note || ''}</p>
                         <div class="status-badge ${isFree ? 'status-free' : 'status-busy'}">
                             <i class="fa-solid ${isFree ? 'fa-circle-check' : 'fa-clock'}"></i> ${doc.status}
                         </div>
@@ -309,14 +372,90 @@
             });
         });
 
-        // 2. Беморнинг қабулга ёзилиш сўровини Firebase'га юбориш
+        function appendAiMessage(text, sender = 'bot') {
+            const chatBox = document.getElementById('ai-chat-box');
+            const div = document.createElement('div');
+            div.className = `msg-bubble ${sender}`;
+            div.textContent = text;
+            chatBox.appendChild(div);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        function formatDoctorsBrief() {
+            if (!currentDoctorsList.length) return "Мутахассислар ҳолати юкланмоқда.";
+            return currentDoctorsList
+                .map(d => `• ${d.name}: ${d.status}${d.note ? ` (${d.note})` : ''}`)
+                .join('\n');
+        }
+
+        window.askQuickStatus = function() {
+            appendAiMessage("Ҳозир ким бўш?", "user");
+            const freeDocs = currentDoctorsList.filter(d => d.status === 'Бўш');
+            if (freeDocs.length) {
+                appendAiMessage(`Ҳозир бўш мутахассислар: ${freeDocs.map(d => d.name).join(', ')}.\n\n${formatDoctorsBrief()}`, "bot");
+            } else {
+                appendAiMessage(`Айни пайтда мутахассислар банд ёки навбатда.\n\n${formatDoctorsBrief()}`, "bot");
+            }
+        };
+
+        window.askQuickAdvice = function(presetQuestion) {
+            document.getElementById('ai-question-input').value = presetQuestion;
+            window.handleDoctorAiAsk();
+        };
+
+        window.handleDoctorAiAsk = async function() {
+            const input = document.getElementById('ai-question-input');
+            const question = input.value.trim();
+            if (!question) return;
+
+            appendAiMessage(question, "user");
+            input.value = '';
+            appendAiMessage("Зина жавоб ёзмоқда...", "bot");
+            const chatBox = document.getElementById('ai-chat-box');
+            const loadingMsg = chatBox.lastElementChild;
+
+            try {
+                const res = await fetch('/api/doctor-ai', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        assistantName: 'Зина',
+                        question,
+                        doctors: currentDoctorsList,
+                        history: chatHistory
+                    })
+                });
+
+                if (res.ok) {
+                    const data = await res.json();
+                    const reply = data.reply || "Мутахассисга мурожаат қилишингизни тавсия этаман.";
+                    loadingMsg.textContent = reply;
+                    chatHistory.push({ role: 'user', parts: [{ text: question }] });
+                    chatHistory.push({ role: 'model', parts: [{ text: reply }] });
+                    return;
+                }
+            } catch (e) {}
+
+            const q = question.toLowerCase();
+            let reply = "";
+            if (q.includes("бўш") || q.includes("банд") || q.includes("ким")) {
+                reply = `Мутахассислар ҳолати:\n${formatDoctorsBrief()}`;
+            } else if (q.includes("бел") || q.includes("бўйин") || q.includes("оғриқ") || q.includes("мануал")) {
+                reply = `Бел ва бўйин зўриқишида мануал терапия йўналишига эътибор қаратиш мумкин. ${formatDoctorsBrief()}\n\nЭслатма: Бу умумий йўналтирувчи маълумот, аниқ ташхис ва муолажани мутахассис белгилайди.`;
+            } else {
+                reply = `Маълумот учун раҳмат! Марказимизда мануал терапия, хижама ва биокоррекция йўналишлари мавжуд.\n\n${formatDoctorsBrief()}\n\nЭслатма: Бу умумий йўналтирувчи маълумот, аниқ ташхис ва муолажани мутахассис белгилайди.`;
+            }
+            loadingMsg.textContent = reply;
+        };
+
         window.submitBooking = function() {
             const name = document.getElementById('patient-name').value.trim();
             const phone = document.getElementById('patient-phone').value.trim();
             const doctor = document.getElementById('patient-doctor').value;
+            const digitsOnly = phone.replace(/\D/g, '');
 
-            if (!name || phone.length < 9) {
-                alert('Илтимос, исм ва телефон рақамингизни тўлиқ киритинг!');
+            if (!name || digitsOnly.length < 11) {
+                alert('Илтимос, исм ва тўлиқ телефон рақамингизни (+998...) киритинг!');
                 return;
             }
 
@@ -339,7 +478,6 @@
                 });
         };
 
-        // 3. Янгиликларни ўқиб чиқариш
         const container = document.getElementById('dynamic-news-container');
         const postsRef = ref(db, 'posts');
 
@@ -359,13 +497,13 @@
                 if (post.type === 'image') {
                     previewMedia = `<img src="${post.content}" alt="Янгилик расми">`;
                 } else {
-                    previewMedia = `<div style="background:#1e293b; height:160px; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#38bdf8; border-radius:10px; font-weight:600;"><i class="fa-brands fa-youtube" style="font-size: 2.5rem; color: #ef4444; margin-bottom: 8px;"></i><span>Видео лавҳа</span></div>`;
+                    previewMedia = `<div style="background:#e2e8f0; height:155px; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#0f172a; border-radius:10px; font-weight:600;"><i class="fa-brands fa-youtube" style="font-size: 2.3rem; color: #ef4444; margin-bottom: 6px;"></i><span>Видео лавҳа</span></div>`;
                 }
 
                 container.innerHTML += `
                     <a href="post.html?id=${post.id}" class="feed-card">
                         ${previewMedia}
-                        <h4 style="margin-top: 10px;">${post.title}</h4>
+                        <h4>${post.title}</h4>
                         <p>${post.desc ? post.desc.substring(0, 80) : ''}...</p>
                     </a>
                 `;
