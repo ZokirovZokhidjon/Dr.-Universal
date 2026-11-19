@@ -1,4 +1,4 @@
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
     if (req.method !== 'POST') {
         return res.status(405).json({ error: 'Method not allowed' });
     }
@@ -9,11 +9,11 @@ export default async function handler(req, res) {
     }
 
     const { question, doctors = [], history = [] } = req.body || {};
-    if (!question || !question.trim()) {
+    if (!question || !String(question).trim()) {
         return res.status(400).json({ error: 'Савол киритилмади' });
     }
 
-    const doctorsText = doctors.length
+    const doctorsText = Array.isArray(doctors) && doctors.length
         ? doctors.map(d => `- ${d.name}: ${d.status}${d.note ? ` (${d.note})` : ''}`).join('\n')
         : 'Мутахассислар ҳолати ҳозирча кўрсатилмаган.';
 
@@ -26,11 +26,12 @@ export default async function handler(req, res) {
         `4) Аниқ тиббий ташхис қўйма, даволаш буюрма; маслаҳат охирида аниқ ташхис ва муолажани мутахассис белгилашини қисқа эслат.\n` +
         `5) Жавобни табиий ва равон ўзбек тилида ёз.`;
 
+    const safeHistory = Array.isArray(history) ? history.slice(-6) : [];
     const contents = [
-        ...history.slice(-6),
+        ...safeHistory,
         {
             role: 'user',
-            parts: [{ text: question.trim() }]
+            parts: [{ text: String(question).trim() }]
         }
     ];
 
@@ -50,14 +51,19 @@ export default async function handler(req, res) {
         );
 
         const data = await response.json();
-        const reply = data?.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+        if (!response.ok) {
+            return res.status(response.status).json({
+                error: data?.error?.message || 'Gemini API хатолиги'
+            });
+        }
 
+        const reply = data?.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
         if (!reply) {
             return res.status(502).json({ error: 'Моделдан жавоб олинмади' });
         }
 
         return res.status(200).json({ reply });
     } catch (err) {
-        return res.status(500).json({ error: err.message });
+        return res.status(500).json({ error: err.message || 'Сервер хатолиги' });
     }
-}
+};
