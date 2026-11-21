@@ -814,10 +814,9 @@
             document.getElementById('countries-popover-box')?.classList.remove('open');
         });
     </script>
-
-    <script type="module">
+<script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        import { getDatabase, ref, onValue, runTransaction } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCZmmcH3NZfV0-KUtV3-vgrWm_NSuBqouc",
@@ -830,9 +829,67 @@
             measurementId: "G-VKSDLVSZXD"
         };
 
+        // 1. Аввал app ва db ни яратамиз
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
+        // 2. Энди бемалол db дан фойдаланамиз
+        const todayKey = new Date().toISOString().slice(0, 10);
+        const todayRef = ref(db, `stats/daily/${todayKey}`);
+        const totalRef = ref(db, 'stats/total');
+        const countriesRef = ref(db, 'stats/countries');
+
+        // Бугунги ва жами кўришларни жонли кузатиш
+        onValue(todayRef, (snap) => {
+            const el = document.getElementById('site-today-views');
+            if (el) el.textContent = snap.val() ?? 0;
+        });
+
+        onValue(totalRef, (snap) => {
+            const el = document.getElementById('site-total-views');
+            if (el) el.textContent = snap.val() ?? 0;
+        });
+
+        // Давлатлар рўйхатини жонли чиқариш
+        onValue(countriesRef, (snap) => {
+            const listEl = document.getElementById('site-countries-list');
+            const summaryEl = document.getElementById('top-country-summary');
+            const data = snap.val();
+            if (!listEl) return;
+
+            if (!data) {
+                listEl.innerHTML = '<div class="mini-country-row"><span>Маълумот йўқ</span></div>';
+                if (summaryEl) summaryEl.textContent = 'Давлатлар';
+                return;
+            }
+
+            const sorted = Object.entries(data).sort((a, b) => (b[1] || 0) - (a[1] || 0));
+            listEl.innerHTML = sorted
+                .map(([country, count]) => `<div class="mini-country-row"><span>${country}</span><span><b>${count}</b></span></div>`)
+                .join('');
+
+            if (summaryEl && sorted.length > 0) {
+                summaryEl.textContent = `${sorted[0][0]} (${sorted[0][1]})`;
+            }
+        });
+
+        // Бир сессияда бир марта ташриф қўшиш
+        if (!sessionStorage.getItem('dr_visited_session')) {
+            sessionStorage.setItem('dr_visited_session', '1');
+            runTransaction(todayRef, (curr) => (curr || 0) + 1);
+            runTransaction(totalRef, (curr) => (curr || 0) + 1);
+
+            fetch('https://ipapi.co/json/')
+                .then((r) => (r.ok ? r.json() : null))
+                .then((info) => {
+                    const country = info && info.country_name ? info.country_name : 'Unknown';
+                    const safeKey = country.replace(/[.#$/[\]]/g, '_');
+                    runTransaction(ref(db, `stats/countries/${safeKey}`), (curr) => (curr || 0) + 1);
+                })
+                .catch(() => {});
+        }
+
+        // 3. Мутахассислар ҳолати
         const docNames = {
             doc1: "1-Массажист (Мануал)",
             doc2: "2-Массажист (Хижама)",
@@ -861,6 +918,7 @@
             });
         });
 
+        // 4. Янгиликлар лентаси
         const container = document.getElementById('dynamic-news-container');
         const postsRef = ref(db, 'posts');
 
