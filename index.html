@@ -494,38 +494,7 @@
             max-width: 600px;
             margin: 1.5rem auto 0 auto;
             box-shadow: 0 14px 35px rgba(0, 0, 0, 0.45);
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 7px;
-            margin-bottom: 1.1rem;
-        }
-
-        .form-group label {
-            font-size: 0.88rem;
-            color: #cbd5e1;
-            font-weight: 600;
-        }
-
-        .form-group input,
-        .form-group select {
-            background: rgba(2, 6, 23, 0.75);
-            border: 1px solid rgba(148, 163, 184, 0.25);
-            color: var(--text-main);
-            padding: 11px 14px;
-            border-radius: 10px;
-            font-family: inherit;
-            font-size: 0.95rem;
-            outline: none;
-            transition: 0.2s;
-        }
-
-        .form-group input:focus,
-        .form-group select:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.18);
+            text-align: center;
         }
 
         .dynamic-feed {
@@ -718,8 +687,8 @@
             <div class="hero-tag"><i class="fa-solid fa-sparkles"></i> Соғломлаштириш ва Ўқув Маркази</div>
             <h1>Соғлиғингизни <span>Dr. Universal</span> билан тикланг!</h1>
             <p>Тажрибали мутахассислар ва табиий даволаш усуллари орқали оғриқлардан халос бўлинг.</p>
-            <a href="#booking" class="neon-btn">
-                <i class="fa-solid fa-paper-plane"></i> Қабулга ёзилиш
+            <a href="https://t.me/druniversal_bot" target="_blank" class="neon-btn">
+                <i class="fa-brands fa-telegram"></i> Телеграм орқали қабулга ёзилиш
             </a>
         </div>
         
@@ -732,8 +701,8 @@
             </a>
 
             <a href="#booking" class="circle-menu-item">
-                <i class="fa-solid fa-calendar-check"></i>
-                <span>Онлайн<br>Навбат</span>
+                <i class="fa-brands fa-telegram"></i>
+                <span>Телеграм<br>Навбат</span>
             </a>
 
             <a href="#news" class="circle-menu-item">
@@ -753,52 +722,39 @@
         <section id="doctors">
             <div class="section-title">
                 <h2>Мутахассисларимиз вақти ва ҳолати</h2>
-                <p>Қайси массажистимиз бўш эканини жонли кузатиб боринг</p>
+                <p>Қайси массажистимиз бўш ёки бандлигини жонли кузатиб боринг</p>
             </div>
             <div class="doctors-status-grid" id="doctors-status-container">
                 <div class="doctor-card">
-                    <h3>1-Массажист</h3>
-                    <p style="color:#94a3b8; font-size:0.88rem;">Мануал терапевт</p>
+                    <h3>1-Массажист (Мануал)</h3>
+                    <p style="color:#94a3b8; font-size:0.88rem;">Қабул қилишга тайёр</p>
                     <div class="status-badge status-free">Юкланмоқда...</div>
                 </div>
                 <div class="doctor-card">
-                    <h3>2-Массажист</h3>
-                    <p style="color:#94a3b8; font-size:0.88rem;">Хижама мутахассиси</p>
+                    <h3>2-Массажист (Хижама)</h3>
+                    <p style="color:#94a3b8; font-size:0.88rem;">Қабул қилишга тайёр</p>
                     <div class="status-badge status-free">Юкланмоқда...</div>
                 </div>
                 <div class="doctor-card">
-                    <h3>3-Массажист</h3>
-                    <p style="color:#94a3b8; font-size:0.88rem;">Биокоррекция</p>
+                    <h3>3-Массажист (Биокоррекция)</h3>
+                    <p style="color:#94a3b8; font-size:0.88rem;">Қабул қилишга тайёр</p>
                     <div class="status-badge status-free">Юкланмоқда...</div>
                 </div>
             </div>
         </section>
 
         <section id="booking" class="booking-section">
-            <div class="section-title" style="margin-bottom: 1.3rem;">
+            <div class="section-title" style="margin-bottom: 1rem;">
                 <h2>Қабул учун ёзилиш</h2>
-                <p>Маълумотларингизни қолдиринг, биз сиз билан боғланамиз</p>
+                <p>Қабулга ёзилиш фақат расмий Телеграм ботимиз орқали амалга оширилади</p>
             </div>
-            <div class="form-group">
-                <label>Исми Шарифингиз:</label>
-                <input type="text" id="patient-name" placeholder="Масалан: Анвар Каримов">
-            </div>
-            <div class="form-group">
-                <label>Телефон ва Телеграм рақамингиз:</label>
-                <input type="tel" id="patient-phone" placeholder="+998 90 123 45 67" value="+998 ">
-            </div>
-            <div class="form-group">
-                <label>Қайси мутахассисга ёзиласиз?</label>
-                <select id="patient-doctor">
-                    <option value="1-Массажист">1-Массажист</option>
-                    <option value="2-Массажист">2-Массажист</option>
-                    <option value="3-Массажист">3-Массажист</option>
-                    <option value="Фарқи йўқ (Ким бўш бўлса)">Фарқи йўқ (Ким бўш бўлса)</option>
-                </select>
-            </div>
-            <button class="neon-btn" style="width: 100%; margin-top: 0.6rem; padding: 0.8rem 1.4rem; font-size: 0.95rem;" onclick="submitBooking()">
-                <i class="fa-solid fa-check-circle"></i> Қабулга ёзилиш
-            </button>
+            <i class="fa-brands fa-telegram" style="font-size: 3.1rem; color: #38bdf8; margin-bottom: 0.75rem; filter: drop-shadow(0 0 14px rgba(56, 189, 248, 0.45));"></i>
+            <p style="color: var(--text-muted); margin-bottom: 1.3rem; font-size: 0.92rem;">
+                Қайси массажист бўш эканини юқорида кўриб, бот орқали қулай вақтга рўйхатдан ўтинг.
+            </p>
+            <a href="https://t.me/druniversal_bot" target="_blank" class="neon-btn" style="width: 100%; padding: 0.85rem 1.4rem; font-size: 0.98rem;">
+                <i class="fa-brands fa-telegram"></i> Телеграм орқали қабулга ёзилиш (@druniversal_bot)
+            </a>
         </section>
 
         <section id="news" style="margin-top: 3.2rem;">
@@ -875,7 +831,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getDatabase, ref, onValue, push, runTransaction } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        import { getDatabase, ref, onValue, runTransaction } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCZmmcH3NZfV0-KUtV3-vgrWm_NSuBqouc",
@@ -918,36 +874,6 @@
                 `;
             });
         });
-
-        window.submitBooking = function() {
-            const name = document.getElementById('patient-name').value.trim();
-            const phone = document.getElementById('patient-phone').value.trim();
-            const doctor = document.getElementById('patient-doctor').value;
-            const digitsOnly = phone.replace(/\D/g, '');
-
-            if (!name || digitsOnly.length < 11) {
-                alert('Илтимос, исм ва тўлиқ телефон рақамингизни (+998...) киритинг!');
-                return;
-            }
-
-            const bookingData = {
-                name: name,
-                phone: phone,
-                doctor: doctor,
-                time: new Date().toLocaleString(),
-                status: 'Янги мурожаат'
-            };
-
-            push(ref(db, 'bookings'), bookingData)
-                .then(() => {
-                    alert('Аризангиз муваффақиятли қабул қилинди! Тез орада сиз билан боғланамиз.');
-                    document.getElementById('patient-name').value = '';
-                    document.getElementById('patient-phone').value = '+998 ';
-                })
-                .catch((error) => {
-                    alert('Хатолик юз берди: ' + error.message);
-                });
-        };
 
         const container = document.getElementById('dynamic-news-container');
         const postsRef = ref(db, 'posts');
