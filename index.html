@@ -39,15 +39,120 @@
             overflow-x: hidden;
         }
 
+        /* Тепа қисмдаги ихчам статус ва жонли статистика панели */
         .top-ticker {
-            background: rgba(2, 132, 199, 0.12);
-            border-bottom: 1px solid rgba(56, 189, 248, 0.2);
+            background: rgba(2, 132, 199, 0.14);
+            border-bottom: 1px solid rgba(56, 189, 248, 0.22);
             color: #7dd3fc;
-            font-size: 0.76rem;
+            font-size: 0.75rem;
             font-weight: 600;
-            letter-spacing: 0.04em;
-            text-align: center;
-            padding: 0.42rem 1rem;
+            letter-spacing: 0.03em;
+            padding: 0.42rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .ticker-left {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .live-dot {
+            width: 7px;
+            height: 7px;
+            background-color: #2dd4bf;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #2dd4bf;
+            display: inline-block;
+            animation: pulseDot 1.8s infinite;
+        }
+
+        @keyframes pulseDot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.8); }
+        }
+
+        .mini-visitor-stats {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(15, 23, 42, 0.75);
+            border: 1px solid rgba(56, 189, 248, 0.28);
+            padding: 3px 10px;
+            border-radius: 999px;
+            font-size: 0.73rem;
+            color: #e2e8f0;
+            position: relative;
+        }
+
+        .mini-stat-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .mini-stat-item b {
+            color: var(--primary);
+            font-weight: 800;
+        }
+
+        .countries-dropdown-trigger {
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            color: #5eead4;
+            padding-left: 6px;
+            border-left: 1px solid rgba(148, 163, 184, 0.25);
+        }
+
+        .countries-popover {
+            display: none;
+            position: absolute;
+            top: calc(100% + 6px);
+            right: 0;
+            background: rgba(15, 23, 42, 0.96);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border-glow);
+            border-radius: 12px;
+            padding: 10px 12px;
+            min-width: 220px;
+            max-width: 300px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.7);
+            z-index: 2000;
+            text-align: left;
+        }
+
+        .mini-visitor-stats:hover .countries-popover,
+        .countries-popover.open {
+            display: block;
+        }
+
+        .countries-popover-title {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            margin-bottom: 6px;
+            font-weight: 700;
+            border-bottom: 1px solid var(--border-subtle);
+            padding-bottom: 4px;
+        }
+
+        .mini-country-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.76rem;
+            padding: 3px 0;
+            color: #f1f5f9;
+        }
+
+        .mini-country-row span b {
+            color: var(--primary);
         }
 
         header {
@@ -129,7 +234,6 @@
             box-shadow: 0 0 24px rgba(20, 184, 166, 0.5), 0 8px 20px rgba(0, 0, 0, 0.45);
         }
 
-        /* Пастдаги локация блоки */
         .mapoffice {
             width: 100%;
             margin-top: 2.5rem;
@@ -158,7 +262,6 @@
             display: block;
         }
 
-        /* Hero ва Орбитал Думалоқ Меню */
         .hero {
             padding: 2rem 5%;
             max-width: 1160px;
@@ -529,6 +632,10 @@
         }
 
         @media (max-width: 900px) {
+            .top-ticker {
+                justify-content: center;
+                padding: 0.4rem 3%;
+            }
             .hero {
                 grid-template-columns: 1fr;
                 padding: 1.5rem 4%;
@@ -559,8 +666,33 @@
 </head>
 <body>
 
+    <!-- Энг тепадаги ихчам статус ва жонли ташрифлар индикатори -->
     <div class="top-ticker">
-        <i class="fa-solid fa-circle-dot"></i> DR. UNIVERSAL SYSTEM ONLINE • НАМАНГАН • ОРЗУ СИТИ
+        <div class="ticker-left">
+            <span class="live-dot"></span>
+            <span>DR. UNIVERSAL ONLINE • НАМАНГАН • ОРЗУ СИТИ</span>
+        </div>
+
+        <div class="mini-visitor-stats" id="mini-stats-widget" title="Реал ташрифлар статистикаси">
+            <span class="mini-stat-item">
+                <i class="fa-solid fa-eye" style="color:#38bdf8;"></i> Бугун: <b id="site-today-views">0</b>
+            </span>
+            <span class="mini-stat-item">
+                <i class="fa-solid fa-users" style="color:#2dd4bf;"></i> Жами: <b id="site-total-views">0</b>
+            </span>
+            <span class="countries-dropdown-trigger" id="countries-toggle-btn">
+                <i class="fa-solid fa-earth-americas"></i>
+                <span id="top-country-summary">Давлатлар</span>
+                <i class="fa-solid fa-caret-down" style="font-size:0.65rem;"></i>
+            </span>
+
+            <div class="countries-popover" id="countries-popover-box">
+                <div class="countries-popover-title">Кўрилаётган давлатлар (реал IP)</div>
+                <div id="site-countries-list">
+                    <div class="mini-country-row"><span>Аниқланмоқда...</span></div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <header>
@@ -730,11 +862,20 @@
             mapBox.classList.add('highlighted');
             setTimeout(() => mapBox.classList.remove('highlighted'), 1600);
         });
+
+        // Телефонда босилганда давлатлар рўйхатини очиш/ёпиш
+        document.getElementById('countries-toggle-btn')?.addEventListener('click', function (e) {
+            e.stopPropagation();
+            document.getElementById('countries-popover-box')?.classList.toggle('open');
+        });
+        document.addEventListener('click', function () {
+            document.getElementById('countries-popover-box')?.classList.remove('open');
+        });
     </script>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getDatabase, ref, onValue, push } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        import { getDatabase, ref, onValue, push, runTransaction } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCZmmcH3NZfV0-KUtV3-vgrWm_NSuBqouc",
@@ -839,6 +980,104 @@
                 `;
             });
         });
+
+        function getTodayKey() {
+            const now = new Date();
+            const y = now.getFullYear();
+            const m = String(now.getMonth() + 1).padStart(2, '0');
+            const d = String(now.getDate()).padStart(2, '0');
+            return `${y}-${m}-${d}`;
+        }
+
+        function sanitizeCountryKey(name) {
+            return String(name || 'Номаълум')
+                .trim()
+                .replace(/[.#$/[\]]/g, ' ')
+                .replace(/\s+/g, ' ') || 'Номаълум';
+        }
+
+        async function detectVisitorCountry() {
+            try {
+                const res = await fetch('https://ipapi.co/json/', { cache: 'no-store' });
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data && data.country_name) {
+                        return sanitizeCountryKey(data.country_name);
+                    }
+                }
+            } catch (_) {}
+
+            try {
+                const res2 = await fetch('https://get.geojs.io/v1/ip/country.json', { cache: 'no-store' });
+                if (res2.ok) {
+                    const data2 = await res2.json();
+                    if (data2 && data2.country) {
+                        return sanitizeCountryKey(data2.country);
+                    }
+                }
+            } catch (_) {}
+
+            return 'Номаълум';
+        }
+
+        async function trackRealVisit() {
+            const todayKey = getTodayKey();
+            const sessionFlag = `dr_universal_tracked_${todayKey}`;
+            if (sessionStorage.getItem(sessionFlag)) return;
+
+            const countryName = await detectVisitorCountry();
+
+            await runTransaction(ref(db, `analytics/dailyViews/${todayKey}`), (current) => {
+                return Number(current || 0) + 1;
+            });
+
+            await runTransaction(ref(db, `analytics/countries/${countryName}`), (current) => {
+                return Number(current || 0) + 1;
+            });
+
+            sessionStorage.setItem(sessionFlag, '1');
+        }
+
+        onValue(ref(db, 'analytics'), (snapshot) => {
+            const data = snapshot.val() || {};
+            const todayKey = getTodayKey();
+            const dailyViews = data.dailyViews || {};
+            const countries = data.countries || {};
+
+            const todayCount = Number(dailyViews[todayKey] || 0);
+            const totalCount = Object.values(dailyViews).reduce((sum, v) => sum + Number(v || 0), 0);
+
+            const todayEl = document.getElementById('site-today-views');
+            const totalEl = document.getElementById('site-total-views');
+            const listEl = document.getElementById('site-countries-list');
+            const summaryEl = document.getElementById('top-country-summary');
+
+            if (todayEl) todayEl.textContent = todayCount;
+            if (totalEl) totalEl.textContent = totalCount;
+
+            const sorted = Object.entries(countries)
+                .map(([name, count]) => ({ name, count: Number(count || 0) }))
+                .filter(c => c.count > 0)
+                .sort((a, b) => b.count - a.count);
+
+            if (summaryEl) {
+                summaryEl.textContent = sorted.length
+                    ? `${sorted[0].name} (${sorted.length} давлат)`
+                    : 'Давлатлар';
+            }
+
+            if (listEl) {
+                if (!sorted.length) {
+                    listEl.innerHTML = '<div class="mini-country-row"><span>Ҳозирча маълумот йўқ</span></div>';
+                } else {
+                    listEl.innerHTML = sorted
+                        .map(c => `<div class="mini-country-row"><span><i class="fa-solid fa-location-dot" style="color:#f87171; margin-right:5px;"></i>${c.name}</span><span><b>${c.count}</b></span></div>`)
+                        .join('');
+                }
+            }
+        });
+
+        trackRealVisit();
     </script>
 </body>
 </html>
