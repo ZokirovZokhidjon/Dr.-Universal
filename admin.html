@@ -451,16 +451,16 @@
             </div>
 
             <div class="form-group" id="iframe-input-group" style="display: none;">
-                <label>Видео Iframe коди (ёки embed / видео ҳаволаси):</label>
-                <textarea id="post-iframe" rows="4" placeholder='<iframe src="https://www.facebook.com/plugins/video.php?..." ...></iframe> ёки <iframe src="https://www.instagram.com/reel/.../embed" ...></iframe> ёки YouTube iframe'></textarea>
+                <label>Видео Iframe коди (ёки Instagram blockquote / embed / видео ҳаволаси):</label>
+                <textarea id="post-iframe" rows="4" placeholder='<iframe src="https://www.facebook.com/plugins/video.php?..." ...></iframe> ёки <blockquote class="instagram-media" ...></blockquote> ёки YouTube iframe'></textarea>
                 <div class="platform-badges">
                     <span class="platform-chip"><i class="fa-brands fa-facebook"></i> Facebook iframe</span>
-                    <span class="platform-chip"><i class="fa-brands fa-instagram"></i> Instagram embed iframe</span>
+                    <span class="platform-chip"><i class="fa-brands fa-instagram"></i> Instagram embed / blockquote</span>
                     <span class="platform-chip"><i class="fa-brands fa-youtube"></i> YouTube iframe</span>
                     <span class="platform-chip"><i class="fa-solid fa-code"></i> Бошқа iframe</span>
                 </div>
                 <small style="color:#94a3b8; font-size:0.76rem; line-height:1.4;">
-                    Эслатма: Facebook ва Instagram'да «Embed / Жойлаштириш» орқали олинган <code>&lt;iframe ...&gt;&lt;/iframe&gt;</code> кодини қўйинг. Оддий пост/рилс ҳаволаси ташланса ҳам, имкон қадар <code>/embed</code> ёки <code>plugins/video.php</code> кўринишига келтирилади.
+                    Эслатма: Facebook, Instagram ёки YouTube'дан олинган <code>&lt;iframe ...&gt;&lt;/iframe&gt;</code> ёки Instagram <code>&lt;blockquote&gt;</code> кодини қўйсангиз, сайтда кўринадиган <code>&lt;iframe&gt;</code>га айлантирилади.
                 </small>
             </div>
 
@@ -568,6 +568,16 @@
             return 'other';
         }
 
+        function extractInstagramEmbedUrl(rawInput) {
+            const permalinkMatch = rawInput.match(/data-instgrm-permalink=["']([^"']+)["']/i);
+            const hrefMatch = rawInput.match(/https?:\/\/(?:www\.)?instagram\.com\/(?:reel|reels|p|tv)\/[a-zA-Z0-9_-]+/i);
+            const candidate = (permalinkMatch && permalinkMatch[1]) || (hrefMatch && hrefMatch[0]) || '';
+            if (!candidate) return '';
+
+            const cleanUrl = candidate.split('?')[0].replace(/\/+$/, '');
+            return `${cleanUrl}/embed/`;
+        }
+
         function buildSafeIframeCode(rawInput, chosenPlatform) {
             const trimmed = (rawInput || '').trim();
             if (!trimmed) return { iframe: '', platform: 'other' };
@@ -576,7 +586,6 @@
                 ? chosenPlatform
                 : detectVideoPlatform(trimmed);
 
-            // Агар фойдаланувчи тўғридан-тўғри <iframe> теги киритган бўлса
             const iframeMatch = trimmed.match(/<iframe[\s\S]*?<\/iframe>/i);
             if (iframeMatch) {
                 let tag = iframeMatch[0];
@@ -594,7 +603,16 @@
                 return { iframe: tag, platform: detected };
             }
 
-            // Агар оддий URL киритилган бўлса, мос embed iframe яратамиз
+            if (detected === 'instagram' || /instagram\.com/i.test(trimmed)) {
+                const igEmbed = extractInstagramEmbedUrl(trimmed);
+                if (igEmbed) {
+                    return {
+                        iframe: `<iframe src="${igEmbed}" width="400" height="540" frameborder="0" scrolling="no" allowtransparency="true" allowfullscreen="true" loading="lazy" style="max-width:100%;border-radius:12px;background:#fff;"></iframe>`,
+                        platform: 'instagram'
+                    };
+                }
+            }
+
             if (!/^https?:\/\//i.test(trimmed)) {
                 return { iframe: '', platform: detected };
             }
@@ -608,17 +626,6 @@
                 return {
                     iframe: `<iframe src="${fbSrc}" width="560" height="315" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" loading="lazy"></iframe>`,
                     platform: 'facebook'
-                };
-            }
-
-            if (detected === 'instagram') {
-                let igEmbedUrl = trimmed.split('?')[0].replace(/\/+$/, '');
-                if (!igEmbedUrl.endsWith('/embed')) {
-                    igEmbedUrl = `${igEmbedUrl}/embed`;
-                }
-                return {
-                    iframe: `<iframe src="${igEmbedUrl}" width="400" height="500" frameborder="0" scrolling="no" allowtransparency="true" allowfullscreen="true" loading="lazy"></iframe>`,
-                    platform: 'instagram'
                 };
             }
 
@@ -879,7 +886,7 @@
             } else {
                 const built = buildSafeIframeCode(rawVideoInput, chosenPlatform);
                 if (!built.iframe) {
-                    alert('Тўғри видео iframe кодини ёки https:// билан бошланувчи видео ҳаволасини киритинг!');
+                    alert('Тўғри видео iframe кодини, Instagram кодини ёки https:// билан бошланувчи видео ҳаволасини киритинг!');
                     return;
                 }
                 persistPostPayload(editId, {
