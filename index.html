@@ -813,8 +813,7 @@
         document.addEventListener('click', function () {
             document.getElementById('countries-popover-box')?.classList.remove('open');
         });
-    </script>
-<script type="module">
+    </script><script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getDatabase, ref, onValue, runTransaction } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
@@ -829,67 +828,73 @@
             measurementId: "G-VKSDLVSZXD"
         };
 
-        // 1. Аввал app ва db ни яратамиз
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        // 2. Энди бемалол db дан фойдаланамиз
-        const todayKey = new Date().toISOString().slice(0, 10);
-        const todayRef = ref(db, `stats/daily/${todayKey}`);
-        const totalRef = ref(db, 'stats/total');
-        const countriesRef = ref(db, 'stats/countries');
+        function getTodayKey() {
+            const now = new Date();
+            const y = now.getFullYear();
+            const m = String(now.getMonth() + 1).padStart(2, '0');
+            const d = String(now.getDate()).padStart(2, '0');
+            return `${y}-${m}-${d}`;
+        }
 
-        // Бугунги ва жами кўришларни жонли кузатиш
-        onValue(todayRef, (snap) => {
-            const el = document.getElementById('site-today-views');
-            if (el) el.textContent = snap.val() ?? 0;
-        });
+        const todayKey = getTodayKey();
+        const analyticsRef = ref(db, 'analytics');
+        const todayViewRef = ref(db, `analytics/dailyViews/${todayKey}`);
 
-        onValue(totalRef, (snap) => {
-            const el = document.getElementById('site-total-views');
-            if (el) el.textContent = snap.val() ?? 0;
-        });
+        onValue(analyticsRef, (snapshot) => {
+            const analyticsData = snapshot.val() || {};
+            const dailyViews = analyticsData.dailyViews || {};
+            const countries = analyticsData.countries || {};
 
-        // Давлатлар рўйхатини жонли чиқариш
-        onValue(countriesRef, (snap) => {
+            const todayCount = Number(dailyViews[todayKey] || 0);
+            const totalCount = Object.values(dailyViews).reduce((acc, v) => acc + Number(v || 0), 0);
+
+            const todayEl = document.getElementById('site-today-views');
+            const totalEl = document.getElementById('site-total-views');
             const listEl = document.getElementById('site-countries-list');
             const summaryEl = document.getElementById('top-country-summary');
-            const data = snap.val();
-            if (!listEl) return;
 
-            if (!data) {
-                listEl.innerHTML = '<div class="mini-country-row"><span>Маълумот йўқ</span></div>';
-                if (summaryEl) summaryEl.textContent = 'Давлатлар';
-                return;
+            if (todayEl) todayEl.textContent = todayCount;
+            if (totalEl) totalEl.textContent = totalCount;
+
+            const sortedCountries = Object.entries(countries)
+                .map(([name, count]) => ({ name, count: Number(count || 0) }))
+                .filter((item) => item.count > 0)
+                .sort((a, b) => b.count - a.count);
+
+            if (listEl) {
+                if (!sortedCountries.length) {
+                    listEl.innerHTML = '<div class="mini-country-row"><span>Маълумот йўқ</span></div>';
+                } else {
+                    listEl.innerHTML = sortedCountries
+                        .map((c) => `<div class="mini-country-row"><span>${c.name}</span><span><b>${c.count}</b></span></div>`)
+                        .join('');
+                }
             }
 
-            const sorted = Object.entries(data).sort((a, b) => (b[1] || 0) - (a[1] || 0));
-            listEl.innerHTML = sorted
-                .map(([country, count]) => `<div class="mini-country-row"><span>${country}</span><span><b>${count}</b></span></div>`)
-                .join('');
-
-            if (summaryEl && sorted.length > 0) {
-                summaryEl.textContent = `${sorted[0][0]} (${sorted[0][1]})`;
+            if (summaryEl) {
+                summaryEl.textContent = sortedCountries.length > 0
+                    ? `${sortedCountries[0].name} (${sortedCountries[0].count})`
+                    : 'Давлатлар';
             }
         });
 
-        // Бир сессияда бир марта ташриф қўшиш
-        if (!sessionStorage.getItem('dr_visited_session')) {
-            sessionStorage.setItem('dr_visited_session', '1');
-            runTransaction(todayRef, (curr) => (curr || 0) + 1);
-            runTransaction(totalRef, (curr) => (curr || 0) + 1);
+        if (!sessionStorage.getItem('dr_universal_analytics_counted')) {
+            sessionStorage.setItem('dr_universal_analytics_counted', '1');
+            runTransaction(todayViewRef, (curr) => Number(curr || 0) + 1);
 
             fetch('https://ipapi.co/json/')
-                .then((r) => (r.ok ? r.json() : null))
+                .then((res) => (res.ok ? res.json() : null))
                 .then((info) => {
-                    const country = info && info.country_name ? info.country_name : 'Unknown';
-                    const safeKey = country.replace(/[.#$/[\]]/g, '_');
-                    runTransaction(ref(db, `stats/countries/${safeKey}`), (curr) => (curr || 0) + 1);
+                    const rawCountry = info && info.country_name ? String(info.country_name).trim() : 'Unknown';
+                    const safeCountryKey = rawCountry.replace(/[.#$/[\]]/g, '_');
+                    runTransaction(ref(db, `analytics/countries/${safeCountryKey}`), (curr) => Number(curr || 0) + 1);
                 })
                 .catch(() => {});
         }
 
-        // 3. Мутахассислар ҳолати
         const docNames = {
             doc1: "1-Массажист (Мануал)",
             doc2: "2-Массажист (Хижама)",
@@ -900,6 +905,7 @@
         onValue(doctorsRef, (snapshot) => {
             const doctors = snapshot.val();
             const docContainer = document.getElementById('doctors-status-container');
+            if (!docContainer) return;
             docContainer.innerHTML = '';
 
             ['doc1', 'doc2', 'doc3'].forEach((key) => {
@@ -918,12 +924,12 @@
             });
         });
 
-        // 4. Янгиликлар лентаси
         const container = document.getElementById('dynamic-news-container');
         const postsRef = ref(db, 'posts');
 
         onValue(postsRef, (snapshot) => {
             const data = snapshot.val();
+            if (!container) return;
             container.innerHTML = '';
 
             if (!data) {
