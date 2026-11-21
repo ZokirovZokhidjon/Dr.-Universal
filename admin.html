@@ -84,7 +84,7 @@
         
         .admin-dashboard {
             display: none;
-            max-width: 860px;
+            max-width: 920px;
             width: 100%;
             background: var(--card-bg);
             backdrop-filter: blur(12px);
@@ -97,6 +97,100 @@
         .admin-dashboard h2 {
             color: var(--primary);
             font-size: 1.5rem;
+        }
+
+        /* Расмдагидек Статистика Блоклари */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 240px 1fr;
+            gap: 1.2rem;
+            margin-bottom: 1.8rem;
+        }
+
+        .stat-card {
+            background: rgba(15, 23, 42, 0.78);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            padding: 1.25rem 1.4rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+        }
+
+        .today-views-box {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            height: 100%;
+        }
+
+        .views-icon-circle {
+            width: 50px;
+            height: 50px;
+            border-radius: 14px;
+            background: rgba(30, 58, 138, 0.45);
+            border: 1px solid rgba(96, 165, 250, 0.35);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #60a5fa;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .views-number {
+            font-size: 1.85rem;
+            font-weight: 800;
+            line-height: 1.1;
+            color: #f8fafc;
+        }
+
+        .views-label {
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            margin-top: 4px;
+            text-transform: uppercase;
+        }
+
+        .countries-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            margin-bottom: 0.9rem;
+            font-size: 0.82rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            color: #cbd5e1;
+            text-transform: uppercase;
+        }
+
+        .countries-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .country-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 6px 12px;
+            border-radius: 10px;
+            background: rgba(2, 6, 23, 0.85);
+            border: 1px solid rgba(148, 163, 184, 0.22);
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: #f1f5f9;
+        }
+
+        .country-pill i {
+            color: #f87171;
+            font-size: 0.78rem;
+        }
+
+        .country-pill b {
+            color: #38bdf8;
         }
         
         .section-box {
@@ -331,6 +425,12 @@
             margin-top: 15px;
         }
 
+        @media (max-width: 780px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
         @media (max-width: 680px) {
             .grid-2 {
                 grid-template-columns: 1fr;
@@ -359,11 +459,47 @@
 
     <!-- 2. Админ панель -->
     <div id="dashboard-screen" class="admin-dashboard">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; gap: 10px;">
-            <h2>Маъмурият Панели</h2>
-            <button class="neon-btn" style="width: auto; padding: 7px 14px; font-size: 0.76rem; background: #ef4444; box-shadow: none;" onclick="logoutAdmin()">
-                <i class="fa-solid fa-right-from-bracket"></i> Чиқиш
-            </button>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; gap: 10px; flex-wrap: wrap;">
+            <div>
+                <h2>DASHBOARD</h2>
+                <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 3px;">
+                    <i class="fa-solid fa-user-check" style="color:#38bdf8;"></i> Хуш келибсиз, Зоҳиджон Носирович[cite: 1]
+                </p>
+            </div>
+            <div style="display:flex; gap:8px;">
+                <button class="secondary-btn" onclick="loadAdminData()">
+                    <i class="fa-solid fa-rotate"></i> Янгилаш
+                </button>
+                <button class="neon-btn" style="width: auto; padding: 9px 15px; font-size: 0.78rem; background: #ef4444; box-shadow: none;" onclick="logoutAdmin()">
+                    <i class="fa-solid fa-right-from-bracket"></i> Чиқиш
+                </button>
+            </div>
+        </div>
+
+        <!-- Ҳақиқий ташрифлар ва давлатлар индикатори -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="today-views-box">
+                    <div class="views-icon-circle">
+                        <i class="fa-solid fa-eye"></i>
+                    </div>
+                    <div>
+                        <div class="views-number" id="admin-today-views">0</div>
+                        <div class="views-label">Бугунги кўришлар</div>
+                        <small style="color:#64748b; font-size:0.72rem;" id="admin-total-views">Жами: 0</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="countries-header">
+                    <span><i class="fa-solid fa-earth-americas" style="color:#38bdf8; margin-right:6px;"></i> Давлатлар бўйича ташрифлар:</span>
+                    <span style="font-size:0.72rem; color:#64748b; text-transform:none;">Реал IP статистика</span>
+                </div>
+                <div class="countries-pills" id="admin-countries-pills">
+                    <span class="country-pill"><i class="fa-solid fa-location-dot"></i> Юкланмоқда...</span>
+                </div>
+            </div>
         </div>
 
         <!-- Массажистларнинг ҳолатини бошқариш панели -->
@@ -459,9 +595,6 @@
                     <span class="platform-chip"><i class="fa-brands fa-youtube"></i> YouTube iframe</span>
                     <span class="platform-chip"><i class="fa-solid fa-code"></i> Бошқа iframe</span>
                 </div>
-                <small style="color:#94a3b8; font-size:0.76rem; line-height:1.4;">
-                    Эслатма: Facebook, Instagram ёки YouTube'дан олинган <code>&lt;iframe ...&gt;&lt;/iframe&gt;</code> ёки Instagram <code>&lt;blockquote&gt;</code> кодини қўйсангиз, сайтда кўринадиган <code>&lt;iframe&gt;</code>га айлантирилади.
-                </small>
             </div>
 
             <div class="grid-2">
@@ -486,7 +619,7 @@
             </div>
         </div>
 
-        <!-- Мавжуд янгиликларни бошқариш (Ўзгартириш ва Ўчириш) -->
+        <!-- Мавжуд янгиликларни бошқариш -->
         <div class="posts-list">
             <h3 style="color:var(--primary); font-size:1.1rem; margin-bottom:1rem;">Мавжуд мақолалар:</h3>
             <div id="admin-posts-container"></div>
@@ -525,6 +658,41 @@
         const ALLOWED_PHONE = "+998501191146";
 
         let latestPostsMap = {};
+
+        function getTodayKey() {
+            const now = new Date();
+            const y = now.getFullYear();
+            const m = String(now.getMonth() + 1).padStart(2, '0');
+            const d = String(now.getDate()).padStart(2, '0');
+            return `${y}-${m}-${d}`;
+        }
+
+        function renderAdminAnalytics(analyticsData) {
+            const todayKey = getTodayKey();
+            const dailyViews = (analyticsData && analyticsData.dailyViews) || {};
+            const countries = (analyticsData && analyticsData.countries) || {};
+
+            const todayCount = Number(dailyViews[todayKey] || 0);
+            const totalCount = Object.values(dailyViews).reduce((acc, v) => acc + Number(v || 0), 0);
+
+            document.getElementById('admin-today-views').textContent = todayCount;
+            document.getElementById('admin-total-views').textContent = `Жами: ${totalCount}`;
+
+            const pillsContainer = document.getElementById('admin-countries-pills');
+            const sortedCountries = Object.entries(countries)
+                .map(([name, count]) => ({ name, count: Number(count || 0) }))
+                .filter(item => item.count > 0)
+                .sort((a, b) => b.count - a.count);
+
+            if (!sortedCountries.length) {
+                pillsContainer.innerHTML = '<span class="country-pill"><i class="fa-solid fa-location-dot"></i> Ҳозирча ташрифлар қайд этилмаган</span>';
+                return;
+            }
+
+            pillsContainer.innerHTML = sortedCountries
+                .map(c => `<span class="country-pill"><i class="fa-solid fa-location-dot"></i> ${c.name}: <b>${c.count}</b></span>`)
+                .join('');
+        }
 
         window.verifyLogin = function() {
             let inputPhone = document.getElementById('admin-phone').value.trim().replace(/\s+/g, '');
@@ -672,7 +840,11 @@
                 .catch(err => alert('Хатолик: ' + err.message));
         };
 
-        function loadAdminData() {
+        window.loadAdminData = function() {
+            onValue(ref(db, 'analytics'), (snapshot) => {
+                renderAdminAnalytics(snapshot.val());
+            });
+
             onValue(ref(db, 'doctors'), (snapshot) => {
                 const data = snapshot.val();
                 if (data) {
@@ -747,7 +919,7 @@
                     `;
                 });
             });
-        }
+        };
 
         window.startEditPost = function(id) {
             const post = latestPostsMap[id];
