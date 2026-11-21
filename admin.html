@@ -154,6 +154,25 @@
             grid-template-columns: 1fr 1fr;
             gap: 1rem;
         }
+
+        .platform-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 2px;
+        }
+
+        .platform-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.78rem;
+            padding: 4px 10px;
+            border-radius: 999px;
+            background: rgba(56, 189, 248, 0.12);
+            color: #bae6fd;
+            border: 1px solid rgba(56, 189, 248, 0.25);
+        }
         
         .neon-btn {
             background: linear-gradient(135deg, #0284c7, #0d9488);
@@ -404,12 +423,25 @@
                 <input type="text" id="post-title" placeholder="Масалан: Расмий хабар ёки янги лавҳа">
             </div>
 
-            <div class="form-group">
-                <label>Мазмун тури:</label>
-                <select id="media-type" onchange="toggleMediaType()">
-                    <option value="image">Расм юклаш (ёки расм ҳаволаси)</option>
-                    <option value="video">YouTube Видео (iframe код)</option>
-                </select>
+            <div class="grid-2">
+                <div class="form-group">
+                    <label>Мазмун тури:</label>
+                    <select id="media-type" onchange="toggleMediaType()">
+                        <option value="image">Расм юклаш (ёки расм ҳаволаси)</option>
+                        <option value="video">Видео (YouTube, Facebook, Instagram, бошқа iframe)</option>
+                    </select>
+                </div>
+
+                <div class="form-group" id="platform-select-group" style="display: none;">
+                    <label>Видео платформаси:</label>
+                    <select id="video-platform">
+                        <option value="auto">Автоматик аниқлаш (Iframe/URL дан)</option>
+                        <option value="facebook">Facebook</option>
+                        <option value="instagram">Instagram</option>
+                        <option value="youtube">YouTube</option>
+                        <option value="other">Бошқа видео манба (Iframe)</option>
+                    </select>
+                </div>
             </div>
 
             <div class="form-group" id="file-input-group">
@@ -419,14 +451,23 @@
             </div>
 
             <div class="form-group" id="iframe-input-group" style="display: none;">
-                <label>YouTube Iframe коди:</label>
-                <textarea id="post-iframe" rows="3" placeholder='<iframe ...></iframe>'></textarea>
+                <label>Видео Iframe коди (ёки embed / видео ҳаволаси):</label>
+                <textarea id="post-iframe" rows="4" placeholder='<iframe src="https://www.facebook.com/plugins/video.php?..." ...></iframe> ёки <iframe src="https://www.instagram.com/reel/.../embed" ...></iframe> ёки YouTube iframe'></textarea>
+                <div class="platform-badges">
+                    <span class="platform-chip"><i class="fa-brands fa-facebook"></i> Facebook iframe</span>
+                    <span class="platform-chip"><i class="fa-brands fa-instagram"></i> Instagram embed iframe</span>
+                    <span class="platform-chip"><i class="fa-brands fa-youtube"></i> YouTube iframe</span>
+                    <span class="platform-chip"><i class="fa-solid fa-code"></i> Бошқа iframe</span>
+                </div>
+                <small style="color:#94a3b8; font-size:0.76rem; line-height:1.4;">
+                    Эслатма: Facebook ва Instagram'да «Embed / Жойлаштириш» орқали олинган <code>&lt;iframe ...&gt;&lt;/iframe&gt;</code> кодини қўйинг. Оддий пост/рилс ҳаволаси ташланса ҳам, имкон қадар <code>/embed</code> ёки <code>plugins/video.php</code> кўринишига келтирилади.
+                </small>
             </div>
 
             <div class="grid-2">
                 <div class="form-group">
-                    <label>Расм қайси манбадан олинган? (Манба номи):</label>
-                    <input type="text" id="image-source" placeholder="Масалан: Kun.uz / Unsplash / Расмий манба">
+                    <label>Манба номи (Расм ёки Видео қаердан олинган?):</label>
+                    <input type="text" id="image-source" placeholder="Масалан: Dr. Universal Facebook / Instagram / YouTube">
                 </div>
                 <div class="form-group">
                     <label>Расмий хабар / манба ҳаволаси (URL):</label>
@@ -507,9 +548,110 @@
 
         window.toggleMediaType = function() {
             const type = document.getElementById('media-type').value;
-            document.getElementById('file-input-group').style.display = type === 'image' ? 'flex' : 'none';
-            document.getElementById('iframe-input-group').style.display = type === 'video' ? 'flex' : 'none';
+            const isVideo = type === 'video';
+            document.getElementById('file-input-group').style.display = isVideo ? 'none' : 'flex';
+            document.getElementById('iframe-input-group').style.display = isVideo ? 'flex' : 'none';
+            document.getElementById('platform-select-group').style.display = isVideo ? 'flex' : 'none';
         };
+
+        function detectVideoPlatform(rawInput) {
+            const lower = (rawInput || '').toLowerCase();
+            if (lower.includes('facebook.com') || lower.includes('fb.watch') || lower.includes('fb.gg')) {
+                return 'facebook';
+            }
+            if (lower.includes('instagram.com')) {
+                return 'instagram';
+            }
+            if (lower.includes('youtube.com') || lower.includes('youtu.be')) {
+                return 'youtube';
+            }
+            return 'other';
+        }
+
+        function buildSafeIframeCode(rawInput, chosenPlatform) {
+            const trimmed = (rawInput || '').trim();
+            if (!trimmed) return { iframe: '', platform: 'other' };
+
+            const detected = chosenPlatform && chosenPlatform !== 'auto'
+                ? chosenPlatform
+                : detectVideoPlatform(trimmed);
+
+            // Агар фойдаланувчи тўғридан-тўғри <iframe> теги киритган бўлса
+            const iframeMatch = trimmed.match(/<iframe[\s\S]*?<\/iframe>/i);
+            if (iframeMatch) {
+                let tag = iframeMatch[0];
+                const srcMatch = tag.match(/src=["']([^"']+)["']/i);
+                const srcVal = srcMatch ? srcMatch[1].trim() : '';
+                if (!/^https?:\/\//i.test(srcVal)) {
+                    return { iframe: '', platform: detected };
+                }
+                if (!/allowfullscreen/i.test(tag)) {
+                    tag = tag.replace(/<iframe/i, '<iframe allowfullscreen');
+                }
+                if (!/loading=/i.test(tag)) {
+                    tag = tag.replace(/<iframe/i, '<iframe loading="lazy"');
+                }
+                return { iframe: tag, platform: detected };
+            }
+
+            // Агар оддий URL киритилган бўлса, мос embed iframe яратамиз
+            if (!/^https?:\/\//i.test(trimmed)) {
+                return { iframe: '', platform: detected };
+            }
+
+            const encodedUrl = encodeURIComponent(trimmed);
+
+            if (detected === 'facebook') {
+                const fbSrc = trimmed.includes('/plugins/video.php')
+                    ? trimmed
+                    : `https://www.facebook.com/plugins/video.php?href=${encodedUrl}&show_text=false&width=560`;
+                return {
+                    iframe: `<iframe src="${fbSrc}" width="560" height="315" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" loading="lazy"></iframe>`,
+                    platform: 'facebook'
+                };
+            }
+
+            if (detected === 'instagram') {
+                let igEmbedUrl = trimmed.split('?')[0].replace(/\/+$/, '');
+                if (!igEmbedUrl.endsWith('/embed')) {
+                    igEmbedUrl = `${igEmbedUrl}/embed`;
+                }
+                return {
+                    iframe: `<iframe src="${igEmbedUrl}" width="400" height="500" frameborder="0" scrolling="no" allowtransparency="true" allowfullscreen="true" loading="lazy"></iframe>`,
+                    platform: 'instagram'
+                };
+            }
+
+            if (detected === 'youtube') {
+                let ytId = '';
+                const shortMatch = trimmed.match(/youtu\.be\/([a-zA-Z0-9_-]{6,})/);
+                const watchMatch = trimmed.match(/[?&]v=([a-zA-Z0-9_-]{6,})/);
+                const shortsMatch = trimmed.match(/youtube\.com\/shorts\/([a-zA-Z0-9_-]{6,})/);
+                const embedMatch = trimmed.match(/youtube\.com\/embed\/([a-zA-Z0-9_-]{6,})/);
+                ytId = (shortMatch && shortMatch[1]) || (watchMatch && watchMatch[1]) || (shortsMatch && shortsMatch[1]) || (embedMatch && embedMatch[1]) || '';
+                if (ytId) {
+                    return {
+                        iframe: `<iframe width="560" height="315" src="https://www.youtube.com/embed/${ytId}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe>`,
+                        platform: 'youtube'
+                    };
+                }
+            }
+
+            return {
+                iframe: `<iframe src="${trimmed}" width="560" height="315" frameborder="0" allowfullscreen loading="lazy"></iframe>`,
+                platform: detected
+            };
+        }
+
+        function formatPlatformLabel(platform) {
+            const labels = {
+                facebook: 'Facebook',
+                instagram: 'Instagram',
+                youtube: 'YouTube',
+                other: 'Iframe видео'
+            };
+            return labels[platform] || 'Видео';
+        }
 
         window.updateDoctorsStatus = function() {
             const doctorsData = {
@@ -574,13 +716,16 @@
                 }
 
                 entries.reverse().forEach(([id, p]) => {
-                    const sourceInfo = p.imageSource ? `Расм манбаси: ${p.imageSource}` : 'Расм манбаси кўрсатилмаган';
-                    const linkInfo = p.sourceUrl ? ` • Хавола: ${p.sourceUrl}` : '';
+                    const mediaTag = p.type === 'video'
+                        ? `Видео (${formatPlatformLabel(p.platform || detectVideoPlatform(p.content))})`
+                        : 'Расм';
+                    const sourceInfo = p.imageSource ? `Манба: ${p.imageSource}` : 'Манба кўрсатилмаган';
+                    const linkInfo = p.sourceUrl ? ` • Ҳавола: ${p.sourceUrl}` : '';
 
                     container.innerHTML += `
                         <div class="post-row">
                             <div class="post-info">
-                                <span class="post-title-text">${p.title || 'Номсиз хабар'}</span>
+                                <span class="post-title-text">${p.title || 'Номсиз хабар'} <small style="color:#38bdf8; font-weight:600;">[${mediaTag}]</small></span>
                                 <span class="post-meta-text">${sourceInfo}${linkInfo}</span>
                             </div>
                             <div class="row-actions">
@@ -615,6 +760,7 @@
 
             if (post.type === 'video') {
                 document.getElementById('post-iframe').value = post.content || '';
+                document.getElementById('video-platform').value = post.platform || 'auto';
                 document.getElementById('current-media-hint').textContent = '';
             } else {
                 document.getElementById('post-file').value = '';
@@ -638,6 +784,7 @@
             document.getElementById('source-url').value = '';
             document.getElementById('post-file').value = '';
             document.getElementById('post-iframe').value = '';
+            document.getElementById('video-platform').value = 'auto';
             document.getElementById('current-media-hint').textContent = '';
             document.getElementById('media-type').value = 'image';
             toggleMediaType();
@@ -691,7 +838,8 @@
             const imageSource = document.getElementById('image-source').value.trim();
             const sourceUrl = normalizeUrl(document.getElementById('source-url').value);
             const fileInput = document.getElementById('post-file');
-            const iframeCode = document.getElementById('post-iframe').value.trim();
+            const rawVideoInput = document.getElementById('post-iframe').value.trim();
+            const chosenPlatform = document.getElementById('video-platform').value;
 
             if (!title) {
                 alert('Сарлавҳани киритинг!');
@@ -729,17 +877,19 @@
                     });
                 }
             } else {
-                if (!iframeCode) {
-                    alert('YouTube кодини киритинг!');
+                const built = buildSafeIframeCode(rawVideoInput, chosenPlatform);
+                if (!built.iframe) {
+                    alert('Тўғри видео iframe кодини ёки https:// билан бошланувчи видео ҳаволасини киритинг!');
                     return;
                 }
                 persistPostPayload(editId, {
                     type: 'video',
+                    platform: built.platform,
                     title,
                     desc,
                     imageSource,
                     sourceUrl,
-                    content: iframeCode
+                    content: built.iframe
                 });
             }
         };

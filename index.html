@@ -86,8 +86,9 @@
 
         .nav-links {
             display: flex;
-            gap: 1.5rem;
+            gap: 1.4rem;
             list-style: none;
+            align-items: center;
         }
 
         .nav-links a {
@@ -96,6 +97,9 @@
             font-weight: 600;
             font-size: 0.88rem;
             transition: 0.25s;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
         }
 
         .nav-links a:hover {
@@ -125,25 +129,30 @@
             box-shadow: 0 0 24px rgba(20, 184, 166, 0.5), 0 8px 20px rgba(0, 0, 0, 0.45);
         }
 
-        /* Харита блоки */
+        /* Пастдаги локация блоки */
         .mapoffice {
             width: 100%;
-            max-width: 1160px;
-            margin: 1.5rem auto 0 auto;
-            padding: 0 1.5rem;
+            margin-top: 2.5rem;
+            scroll-margin-top: 85px;
         }
 
         .map-frame-wrap {
             background: var(--surface-bg);
-            padding: 8px;
+            padding: 10px;
             border-radius: 20px;
             border: 1px solid var(--border-glow);
             box-shadow: 0 12px 35px rgba(0, 0, 0, 0.55);
+            transition: 0.3s;
+        }
+
+        .map-frame-wrap.highlighted {
+            border-color: var(--primary);
+            box-shadow: 0 0 28px rgba(56, 189, 248, 0.45);
         }
 
         .mapoffice iframe {
             width: 100%;
-            height: 270px;
+            height: 300px;
             border-radius: 14px;
             border: none;
             display: block;
@@ -203,7 +212,6 @@
             line-height: 1.55;
         }
 
-        /* Universalportal услубидаги Оқ-Кумушранг Думалоқ Орбитал Меню */
         .orbital-menu-wrapper {
             position: relative;
             display: flex;
@@ -214,7 +222,6 @@
             padding: 1rem 0;
         }
 
-        /* Орқа фондаги пунктир орбита ёйи */
         .orbital-arc {
             position: absolute;
             right: 22%;
@@ -250,13 +257,11 @@
             z-index: 2;
         }
 
-        /* Расмдагидек ёй бўйлаб силжиш (офсет) */
         .circle-menu-item:nth-child(2) { transform: translateX(18px); }
         .circle-menu-item:nth-child(3) { transform: translateX(-16px); }
         .circle-menu-item:nth-child(4) { transform: translateX(-16px); }
         .circle-menu-item:nth-child(5) { transform: translateX(18px); }
 
-        /* Думалоқ тугма ўнг ёнидаги орбитал нуқтача-ҳалқа */
         .circle-menu-item::after {
             content: "";
             position: absolute;
@@ -325,7 +330,6 @@
             font-size: 0.9rem;
         }
 
-        /* Мутахассислар карточкалари */
         .doctors-status-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -378,7 +382,6 @@
             border: 1px solid rgba(248, 113, 113, 0.4);
         }
 
-        /* Қабулга ёзилиш формаси */
         .booking-section {
             background: var(--surface-bg);
             backdrop-filter: blur(12px);
@@ -422,7 +425,6 @@
             box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.18);
         }
 
-        /* Янгиликлар лентаси */
         .dynamic-feed {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(265px, 1fr));
@@ -468,7 +470,6 @@
             line-height: 1.45;
         }
 
-        /* Алоқа ва Телеграм блок */
         .contact-section {
             display: grid;
             grid-template-columns: 1.15fr 0.85fr;
@@ -553,9 +554,6 @@
             .nav-links {
                 display: none;
             }
-            .mapoffice {
-                padding: 0 1rem;
-            }
         }
     </style>
 </head>
@@ -576,17 +574,12 @@
             <li><a href="#booking">Қабулга ёзилиш</a></li>
             <li><a href="#news">Янгиликлар</a></li>
             <li><a href="#contact">Алоқа</a></li>
+            <li><a href="#location" id="menu-location-btn"><i class="fa-solid fa-location-dot"></i> Локация</a></li>
         </ul>
         <a href="admin.html" class="neon-btn" style="font-size: 0.78rem; padding: 0.48rem 1.05rem;">
             <i class="fa-solid fa-shield-halved"></i> Админ
         </a>
     </header>
-
-    <div class="mapoffice">
-        <div class="map-frame-wrap">
-            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d12043.703911844743!2d71.54957799999998!3d41.004993333333346!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x38bb35f2ebc7c52d%3A0x816ef67b29c23711!2sorzu%20city!5e0!3m2!1sru!2s!4v1794916736257!5m2!1sru!2s" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
-        </div>
-    </div>
 
     <section class="hero" id="about">
         <div class="hero-content">
@@ -598,7 +591,6 @@
             </a>
         </div>
         
-        <!-- Думалоқ орбитал меню -->
         <div class="orbital-menu-wrapper">
             <div class="orbital-arc"></div>
 
@@ -713,12 +705,32 @@
             </div>
         </section>
 
+        <!-- Саҳифа пастидаги локация (харита) блоки -->
+        <section class="mapoffice" id="location">
+            <div class="section-title" style="margin-bottom: 1.1rem;">
+                <h2>Бизнинг манзил (Локация)</h2>
+                <p>Наманган ш., «Орзу» МФЙ, «Орзу сити» 6-уй («Диёр» дўкони орқа томони, «Физиотерапия» бўлими)</p>
+            </div>
+            <div class="map-frame-wrap" id="map-frame-box">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d12043.703911844743!2d71.54957799999998!3d41.004993333333346!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x38bb35f2ebc7c52d%3A0x816ef67b29c23711!2sorzu%20city!5e0!3m2!1sru!2s!4v1794916736257!5m2!1sru!2s" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+            </div>
+        </section>
+
     </div>
 
     <footer>
         <div class="license-badge"><i class="fa-solid fa-certificate"></i> Лицензия рақами: № 025159</div>
         <p>&copy; 2026 Dr. Universal Соғломлаштириш ва Ўқув Маркази. Барча ҳуқуқлар ҳимояланган.</p>
     </footer>
+
+    <script>
+        document.getElementById('menu-location-btn')?.addEventListener('click', function () {
+            const mapBox = document.getElementById('map-frame-box');
+            if (!mapBox) return;
+            mapBox.classList.add('highlighted');
+            setTimeout(() => mapBox.classList.remove('highlighted'), 1600);
+        });
+    </script>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
