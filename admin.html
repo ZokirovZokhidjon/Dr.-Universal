@@ -8,39 +8,322 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        :root { --primary: #38bdf8; --dark-bg: #090d16; --card-bg: rgba(15, 23, 42, 0.95); --border-glow: rgba(56, 189, 248, 0.3); }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
-        body { background-color: var(--dark-bg); color: #f8fafc; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 2rem 1rem; }
-        
-        .login-box { max-width: 400px; width: 100%; background: var(--card-bg); border: 1px solid var(--border-glow); padding: 2.5rem; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.6); text-align: center; }
-        .login-box h2 { color: var(--primary); margin-bottom: 0.5rem; font-size: 1.5rem; }
-        .login-box p { color: #94a3b8; font-size: 0.85rem; margin-bottom: 1.5rem; }
-        .login-box input { width: 100%; background: #0f172a; border: 1px solid #334155; color: #fff; padding: 12px; border-radius: 8px; font-size: 1rem; text-align: center; margin-bottom: 1rem; }
-        
-        .admin-dashboard { display: none; max-width: 800px; width: 100%; background: var(--card-bg); border: 1px solid var(--border-glow); padding: 2.5rem; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.6); }
-        .admin-dashboard h2 { color: var(--primary); margin-bottom: 1rem; text-align: center; }
-        
-        .section-box { background: rgba(30, 41, 59, 0.6); border: 1px solid #334155; padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem; }
-        .section-box h3 { color: var(--primary); font-size: 1.1rem; margin-bottom: 1rem; }
+        :root {
+            --primary: #38bdf8;
+            --secondary: #14b8a6;
+            --dark-bg: #030712;
+            --card-bg: rgba(15, 23, 42, 0.92);
+            --inner-bg: rgba(2, 6, 23, 0.75);
+            --border-glow: rgba(56, 189, 248, 0.28);
+            --border-subtle: rgba(148, 163, 184, 0.2);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+        }
 
-        .form-group { display: flex; flex-direction: column; gap: 8px; margin-bottom: 1rem; }
-        label { font-size: 0.9rem; color: #cbd5e1; }
-        input[type="text"], textarea, select { background: #0f172a; border: 1px solid #334155; color: #fff; padding: 12px; border-radius: 8px; font-family: inherit; }
-        
-        .neon-btn { background: linear-gradient(135deg, #0284c7, #0d9488); color: #fff; padding: 12px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; width: 100%; text-transform: uppercase; transition: 0.3s; }
-        .neon-btn:hover { opacity: 0.9; box-shadow: 0 0 15px rgba(56,189,248,0.5); }
-        
-        .posts-list { margin-top: 1.5rem; }
-        .post-row { display: flex; justify-content: space-between; align-items: center; background: #0f172a; padding: 10px 15px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #334155; gap: 10px; }
-        .post-row span { font-size: 0.9rem; color: #cbd5e1; }
-        .del-btn { background: #ef4444; color: #fff; border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
 
-        .back-link { display: inline-block; margin-top: 1.5rem; color: #94a3b8; text-decoration: none; font-size: 0.9rem; }
-        .back-link:hover { color: var(--primary); }
+        body {
+            background-color: var(--dark-bg);
+            color: var(--text-main);
+            background-image:
+                radial-gradient(circle at 15% 15%, rgba(2, 132, 199, 0.2), transparent 40%),
+                radial-gradient(circle at 85% 20%, rgba(13, 148, 136, 0.16), transparent 45%),
+                linear-gradient(180deg, #030712 0%, #070d1d 55%, #030712 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 1rem;
+        }
+        
+        .login-box {
+            max-width: 410px;
+            width: 100%;
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border-glow);
+            padding: 2.4rem;
+            border-radius: 20px;
+            box-shadow: 0 14px 35px rgba(0, 0, 0, 0.65);
+            text-align: center;
+        }
 
-        #custom-popup { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: none; justify-content: center; align-items: center; z-index: 1000; }
-        .popup-content { background: #0f172a; border: 2px solid #ef4444; padding: 2.5rem; max-width: 380px; width: 90%; text-align: center; border-radius: 16px; }
-        .popup-btn { background: #ef4444; color: #fff; border: none; padding: 10px 25px; font-weight: 600; cursor: pointer; border-radius: 6px; margin-top: 15px; }
+        .login-box h2 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            font-size: 1.55rem;
+        }
+
+        .login-box p {
+            color: var(--text-muted);
+            font-size: 0.86rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .login-box input {
+            width: 100%;
+            background: var(--inner-bg);
+            border: 1px solid var(--border-subtle);
+            color: #fff;
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 1rem;
+            text-align: center;
+            margin-bottom: 1rem;
+            outline: none;
+        }
+
+        .login-box input:focus {
+            border-color: var(--primary);
+        }
+        
+        .admin-dashboard {
+            display: none;
+            max-width: 860px;
+            width: 100%;
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border-glow);
+            padding: 2.2rem;
+            border-radius: 22px;
+            box-shadow: 0 14px 40px rgba(0, 0, 0, 0.65);
+        }
+
+        .admin-dashboard h2 {
+            color: var(--primary);
+            font-size: 1.5rem;
+        }
+        
+        .section-box {
+            background: rgba(15, 23, 42, 0.65);
+            border: 1px solid var(--border-subtle);
+            padding: 1.5rem;
+            border-radius: 16px;
+            margin-bottom: 1.8rem;
+        }
+
+        .section-box h3 {
+            color: #7dd3fc;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+            margin-bottom: 1rem;
+        }
+
+        label {
+            font-size: 0.88rem;
+            color: #cbd5e1;
+            font-weight: 600;
+        }
+
+        input[type="text"],
+        input[type="url"],
+        textarea,
+        select {
+            background: var(--inner-bg);
+            border: 1px solid var(--border-subtle);
+            color: #fff;
+            padding: 11px 13px;
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 0.92rem;
+            outline: none;
+            transition: 0.2s;
+        }
+
+        input[type="text"]:focus,
+        input[type="url"]:focus,
+        textarea:focus,
+        select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.16);
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        
+        .neon-btn {
+            background: linear-gradient(135deg, #0284c7, #0d9488);
+            color: #fff;
+            padding: 12px 16px;
+            border: 1px solid rgba(125, 211, 252, 0.3);
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.03em;
+            transition: 0.25s;
+            box-shadow: 0 0 16px rgba(14, 165, 233, 0.28);
+        }
+
+        .neon-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 0 22px rgba(20, 184, 166, 0.45);
+        }
+
+        .secondary-btn {
+            background: rgba(51, 65, 85, 0.8);
+            color: #f8fafc;
+            border: 1px solid rgba(148, 163, 184, 0.35);
+            padding: 11px 15px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.84rem;
+            transition: 0.2s;
+        }
+
+        .secondary-btn:hover {
+            background: rgba(71, 85, 105, 0.9);
+        }
+        
+        .posts-list {
+            margin-top: 1.5rem;
+        }
+
+        .post-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--inner-bg);
+            padding: 12px 16px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            border: 1px solid var(--border-subtle);
+            gap: 12px;
+        }
+
+        .post-info {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            min-width: 0;
+        }
+
+        .post-title-text {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #f8fafc;
+            word-break: break-word;
+        }
+
+        .post-meta-text {
+            font-size: 0.78rem;
+            color: #94a3b8;
+            word-break: break-all;
+        }
+
+        .row-actions {
+            display: flex;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .edit-btn {
+            background: #0284c7;
+            color: #fff;
+            border: none;
+            padding: 7px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+
+        .edit-btn:hover {
+            background: #0369a1;
+        }
+
+        .del-btn {
+            background: #ef4444;
+            color: #fff;
+            border: none;
+            padding: 7px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+
+        .del-btn:hover {
+            background: #dc2626;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 1.4rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .back-link:hover {
+            color: var(--primary);
+        }
+
+        #custom-popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .popup-content {
+            background: #0f172a;
+            border: 2px solid #ef4444;
+            padding: 2.3rem;
+            max-width: 380px;
+            width: 90%;
+            text-align: center;
+            border-radius: 16px;
+        }
+
+        .popup-btn {
+            background: #ef4444;
+            color: #fff;
+            border: none;
+            padding: 10px 25px;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+
+        @media (max-width: 680px) {
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+            .post-row {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .admin-dashboard {
+                padding: 1.4rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -57,47 +340,46 @@
 
     <!-- 2. Админ панель -->
     <div id="dashboard-screen" class="admin-dashboard">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; gap: 10px;">
             <h2>Маъмурият Панели</h2>
-            <button class="neon-btn" style="width: auto; padding: 6px 12px; font-size: 0.75rem; background: #ef4444;" onclick="logoutAdmin()">Чиқиш</button>
+            <button class="neon-btn" style="width: auto; padding: 7px 14px; font-size: 0.76rem; background: #ef4444; box-shadow: none;" onclick="logoutAdmin()">
+                <i class="fa-solid fa-right-from-bracket"></i> Чиқиш
+            </button>
         </div>
 
         <!-- Массажистларнинг ҳолатини бошқариш панели -->
         <div class="section-box">
-            <h3>👨‍⚕️ Массажистлар ҳолатини ўзгартириш</h3>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+            <h3><i class="fa-solid fa-user-doctor"></i> Массажистлар ҳолатини ўзгартириш</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 1rem;">
                 
-                <!-- 1-Массажист -->
-                <div style="background:#0f172a; padding:12px; border-radius:8px; border:1px solid #334155;">
+                <div style="background:rgba(2,6,23,0.75); padding:12px; border-radius:12px; border:1px solid var(--border-subtle);">
                     <label style="font-weight:bold; color:var(--primary);">1-Массажист</label>
-                    <select id="doc1-status" style="margin-top:6px; margin-bottom:8px;">
+                    <select id="doc1-status" style="width:100%; margin-top:6px; margin-bottom:8px;">
                         <option value="Бўш">🟢 Бўш (Қабул қилишда)</option>
                         <option value="Банд">🔴 Банд</option>
                         <option value="Дам олишда">🟡 Дам олишда</option>
                     </select>
-                    <input type="text" id="doc1-note" placeholder="Қўшимча изоҳ (масалан: 15:00 гача банд)" style="font-size:0.85rem;">
+                    <input type="text" id="doc1-note" placeholder="Қўшимча изоҳ (масалан: 15:00 гача банд)" style="width:100%; font-size:0.85rem;">
                 </div>
 
-                <!-- 2-Массажист -->
-                <div style="background:#0f172a; padding:12px; border-radius:8px; border:1px solid #334155;">
+                <div style="background:rgba(2,6,23,0.75); padding:12px; border-radius:12px; border:1px solid var(--border-subtle);">
                     <label style="font-weight:bold; color:var(--primary);">2-Массажист</label>
-                    <select id="doc2-status" style="margin-top:6px; margin-bottom:8px;">
+                    <select id="doc2-status" style="width:100%; margin-top:6px; margin-bottom:8px;">
                         <option value="Бўш">🟢 Бўш (Қабул қилишда)</option>
                         <option value="Банд">🔴 Банд</option>
                         <option value="Дам олишда">🟡 Дам олишда</option>
                     </select>
-                    <input type="text" id="doc2-note" placeholder="Қўшимча изоҳ" style="font-size:0.85rem;">
+                    <input type="text" id="doc2-note" placeholder="Қўшимча изоҳ" style="width:100%; font-size:0.85rem;">
                 </div>
 
-                <!-- 3-Массажист -->
-                <div style="background:#0f172a; padding:12px; border-radius:8px; border:1px solid #334155;">
+                <div style="background:rgba(2,6,23,0.75); padding:12px; border-radius:12px; border:1px solid var(--border-subtle);">
                     <label style="font-weight:bold; color:var(--primary);">3-Массажист</label>
-                    <select id="doc3-status" style="margin-top:6px; margin-bottom:8px;">
+                    <select id="doc3-status" style="width:100%; margin-top:6px; margin-bottom:8px;">
                         <option value="Бўш">🟢 Бўш (Қабул қилишда)</option>
                         <option value="Банд">🔴 Банд</option>
                         <option value="Дам олишда">🟡 Дам олишда</option>
                     </select>
-                    <input type="text" id="doc3-note" placeholder="Қўшимча изоҳ" style="font-size:0.85rem;">
+                    <input type="text" id="doc3-note" placeholder="Қўшимча изоҳ" style="width:100%; font-size:0.85rem;">
                 </div>
 
             </div>
@@ -106,42 +388,64 @@
 
         <!-- Беморлардан келган буюртмалар рўйхати -->
         <div class="section-box">
-            <h3>📋 Қабулга ёзилган беморлар рўйхати</h3>
+            <h3><i class="fa-solid fa-clipboard-list"></i> Қабулга ёзилган беморлар рўйхати</h3>
             <div id="admin-bookings-container">
                 <p style="color:#94a3b8; font-size:0.9rem;">Ҳозирча мурожаатлар йўқ.</p>
             </div>
         </div>
 
-        <!-- Янгилик қўшиш бўлими -->
-        <div class="section-box">
-            <h3>📰 Сайтга янгилик қўшиш</h3>
+        <!-- Янгилик қўшиш / Ўзгартириш бўлими -->
+        <div class="section-box" id="post-editor-box">
+            <h3 id="editor-heading"><i class="fa-solid fa-newspaper"></i> Сайтга янгилик қўшиш</h3>
+            <input type="hidden" id="editing-post-id" value="">
+
             <div class="form-group">
                 <label>Сарлавҳа:</label>
-                <input type="text" id="post-title" placeholder="Масалан: Янги видео лавҳа">
+                <input type="text" id="post-title" placeholder="Масалан: Расмий хабар ёки янги лавҳа">
             </div>
+
             <div class="form-group">
                 <label>Мазмун тури:</label>
                 <select id="media-type" onchange="toggleMediaType()">
-                    <option value="image">Расм юклаш</option>
+                    <option value="image">Расм юклаш (ёки расм ҳаволаси)</option>
                     <option value="video">YouTube Видео (iframe код)</option>
                 </select>
             </div>
+
             <div class="form-group" id="file-input-group">
                 <label>Расм файлини танлаш:</label>
                 <input type="file" id="post-file" accept="image/*" style="background:none; border:none; padding:0;">
+                <small id="current-media-hint" style="color:#7dd3fc; font-size:0.78rem;"></small>
             </div>
+
             <div class="form-group" id="iframe-input-group" style="display: none;">
                 <label>YouTube Iframe коди:</label>
                 <textarea id="post-iframe" rows="3" placeholder='<iframe ...></iframe>'></textarea>
             </div>
+
+            <div class="grid-2">
+                <div class="form-group">
+                    <label>Расм қайси манбадан олинган? (Манба номи):</label>
+                    <input type="text" id="image-source" placeholder="Масалан: Kun.uz / Unsplash / Расмий манба">
+                </div>
+                <div class="form-group">
+                    <label>Расмий хабар / манба ҳаволаси (URL):</label>
+                    <input type="url" id="source-url" placeholder="https://example.com/rasmiy-xabar">
+                </div>
+            </div>
+
             <div class="form-group">
                 <label>Қисқача тавсиф:</label>
                 <textarea id="post-desc" rows="2" placeholder="Батафсил маълумот..."></textarea>
             </div>
-            <button class="neon-btn" onclick="savePost()">Сайтга чиқариш</button>
+
+            <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                <button class="neon-btn" id="save-post-btn" style="flex:1;" onclick="savePost()">Сайтга чиқариш</button>
+                <button type="button" class="secondary-btn" id="cancel-edit-btn" style="display:none;" onclick="resetPostEditor()">Бекор қилиш</button>
+            </div>
         </div>
 
-        <!-- Мавжуд янгиликларни ўчириш -->
+        <!-- Мавжуд янгиликларни бошқариш (Ўзгартириш ва Ўчириш) -->
         <div class="posts-list">
             <h3 style="color:var(--primary); font-size:1.1rem; margin-bottom:1rem;">Мавжуд мақолалар:</h3>
             <div id="admin-posts-container"></div>
@@ -160,10 +464,9 @@
         </div>
     </div>
 
-    <!-- Firebase va Admin Skriptlari -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getDatabase, ref, push, set, onValue, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        import { getDatabase, ref, push, set, update, onValue, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCZmmcH3NZfV0-KUtV3-vgrWm_NSuBqouc",
@@ -180,6 +483,8 @@
         const db = getDatabase(app);
         const ALLOWED_PHONE = "+998501191146";
 
+        let latestPostsMap = {};
+
         window.verifyLogin = function() {
             let inputPhone = document.getElementById('admin-phone').value.trim().replace(/\s+/g, '');
             if (inputPhone === ALLOWED_PHONE) {
@@ -191,7 +496,10 @@
             }
         };
 
-        window.closePopup = function() { document.getElementById('custom-popup').style.display = 'none'; };
+        window.closePopup = function() {
+            document.getElementById('custom-popup').style.display = 'none';
+        };
+
         window.logoutAdmin = function() {
             document.getElementById('dashboard-screen').style.display = 'none';
             document.getElementById('login-screen').style.display = 'block';
@@ -203,7 +511,6 @@
             document.getElementById('iframe-input-group').style.display = type === 'video' ? 'flex' : 'none';
         };
 
-        // Массажистлар статусини сақлаш
         window.updateDoctorsStatus = function() {
             const doctorsData = {
                 doc1: { status: document.getElementById('doc1-status').value, note: document.getElementById('doc1-note').value },
@@ -216,9 +523,7 @@
                 .catch(err => alert('Хатолик: ' + err.message));
         };
 
-        // Админда малумотларни юклаш (Беморлар ва Янгиликлар)
         function loadAdminData() {
-            // Массажистларнинг эски ҳолатини формага чиқариб қўйиш
             onValue(ref(db, 'doctors'), (snapshot) => {
                 const data = snapshot.val();
                 if (data) {
@@ -231,7 +536,6 @@
                 }
             });
 
-            // Беморлар буюртмаларини кўрсатиш
             onValue(ref(db, 'bookings'), (snapshot) => {
                 const data = snapshot.val();
                 const container = document.getElementById('admin-bookings-container');
@@ -245,34 +549,99 @@
                 Object.entries(data).reverse().forEach(([id, b]) => {
                     container.innerHTML += `
                         <div class="post-row">
-                            <span><b>${b.name}</b> (${b.phone})<br><small style="color:var(--primary);">Танлови: ${b.doctor}</small></span>
-                            <button class="del-btn" onclick="deleteBooking('${id}')">Ўчириш</button>
+                            <div class="post-info">
+                                <span class="post-title-text">${b.name} (${b.phone})</span>
+                                <span class="post-meta-text" style="color:var(--primary);">Танлови: ${b.doctor}</span>
+                            </div>
+                            <div class="row-actions">
+                                <button class="del-btn" onclick="deleteBooking('${id}')">Ўчириш</button>
+                            </div>
                         </div>
                     `;
                 });
             });
 
-            // Янгиликларни кўрсатиш
             onValue(ref(db, 'posts'), (snapshot) => {
-                const data = snapshot.val();
+                const data = snapshot.val() || {};
+                latestPostsMap = data;
                 const container = document.getElementById('admin-posts-container');
                 container.innerHTML = '';
 
-                if (!data) {
+                const entries = Object.entries(data);
+                if (!entries.length) {
                     container.innerHTML = '<p style="color:#64748b; font-size:0.9rem;">Ҳозирча хабарлар йўқ.</p>';
                     return;
                 }
 
-                Object.entries(data).reverse().forEach(([id, p]) => {
+                entries.reverse().forEach(([id, p]) => {
+                    const sourceInfo = p.imageSource ? `Расм манбаси: ${p.imageSource}` : 'Расм манбаси кўрсатилмаган';
+                    const linkInfo = p.sourceUrl ? ` • Хавола: ${p.sourceUrl}` : '';
+
                     container.innerHTML += `
                         <div class="post-row">
-                            <span>${p.title}</span>
-                            <button class="del-btn" onclick="deletePost('${id}')">Ўчириш</button>
+                            <div class="post-info">
+                                <span class="post-title-text">${p.title || 'Номсиз хабар'}</span>
+                                <span class="post-meta-text">${sourceInfo}${linkInfo}</span>
+                            </div>
+                            <div class="row-actions">
+                                <button class="edit-btn" onclick="startEditPost('${id}')">
+                                    <i class="fa-solid fa-pen"></i> Ўзгартириш
+                                </button>
+                                <button class="del-btn" onclick="deletePost('${id}')">
+                                    <i class="fa-solid fa-trash"></i> Ўчириш
+                                </button>
+                            </div>
                         </div>
                     `;
                 });
             });
         }
+
+        window.startEditPost = function(id) {
+            const post = latestPostsMap[id];
+            if (!post) return;
+
+            document.getElementById('editing-post-id').value = id;
+            document.getElementById('editor-heading').innerHTML = '<i class="fa-solid fa-pen-to-square"></i> Мавжуд хабарни ўзгартириш';
+            document.getElementById('save-post-btn').textContent = 'Ўзгаришларни сақлаш';
+            document.getElementById('cancel-edit-btn').style.display = 'inline-block';
+
+            document.getElementById('post-title').value = post.title || '';
+            document.getElementById('post-desc').value = post.desc || '';
+            document.getElementById('image-source').value = post.imageSource || '';
+            document.getElementById('source-url').value = post.sourceUrl || '';
+            document.getElementById('media-type').value = post.type === 'video' ? 'video' : 'image';
+            toggleMediaType();
+
+            if (post.type === 'video') {
+                document.getElementById('post-iframe').value = post.content || '';
+                document.getElementById('current-media-hint').textContent = '';
+            } else {
+                document.getElementById('post-file').value = '';
+                document.getElementById('current-media-hint').textContent = post.content
+                    ? 'Жорий расм сақланган. Янги расм танламасангиз, эски расм қолади.'
+                    : '';
+            }
+
+            document.getElementById('post-editor-box').scrollIntoView({ behavior: 'smooth' });
+        };
+
+        window.resetPostEditor = function() {
+            document.getElementById('editing-post-id').value = '';
+            document.getElementById('editor-heading').innerHTML = '<i class="fa-solid fa-newspaper"></i> Сайтга янгилик қўшиш';
+            document.getElementById('save-post-btn').textContent = 'Сайтга чиқариш';
+            document.getElementById('cancel-edit-btn').style.display = 'none';
+
+            document.getElementById('post-title').value = '';
+            document.getElementById('post-desc').value = '';
+            document.getElementById('image-source').value = '';
+            document.getElementById('source-url').value = '';
+            document.getElementById('post-file').value = '';
+            document.getElementById('post-iframe').value = '';
+            document.getElementById('current-media-hint').textContent = '';
+            document.getElementById('media-type').value = 'image';
+            toggleMediaType();
+        };
 
         window.deleteBooking = function(id) {
             if (confirm("Ушбу мурожаатни ўчиришни хоҳлайсизми?")) {
@@ -282,14 +651,45 @@
 
         window.deletePost = function(id) {
             if (confirm("Ушбу хабарни ўчиришни хоҳлайсизми?")) {
+                if (document.getElementById('editing-post-id').value === id) {
+                    resetPostEditor();
+                }
                 remove(ref(db, `posts/${id}`));
             }
         };
 
+        function normalizeUrl(rawUrl) {
+            const trimmed = (rawUrl || '').trim();
+            if (!trimmed) return '';
+            if (/^https?:\/\//i.test(trimmed)) return trimmed;
+            return 'https://' + trimmed;
+        }
+
+        function persistPostPayload(editId, payload) {
+            if (editId) {
+                return update(ref(db, `posts/${editId}`), payload).then(() => {
+                    alert('Мақола муваффақиятли ўзгартирилди!');
+                    resetPostEditor();
+                });
+            }
+            return push(ref(db, 'posts'), {
+                ...payload,
+                timestamp: Date.now()
+            }).then(() => {
+                alert('Янгилик сайтга қўшилди!');
+                resetPostEditor();
+            });
+        }
+
         window.savePost = function() {
+            const editId = document.getElementById('editing-post-id').value.trim();
+            const existingPost = editId ? latestPostsMap[editId] : null;
+
             const type = document.getElementById('media-type').value;
             const title = document.getElementById('post-title').value.trim();
             const desc = document.getElementById('post-desc').value.trim();
+            const imageSource = document.getElementById('image-source').value.trim();
+            const sourceUrl = normalizeUrl(document.getElementById('source-url').value);
             const fileInput = document.getElementById('post-file');
             const iframeCode = document.getElementById('post-iframe').value.trim();
 
@@ -300,17 +700,47 @@
 
             if (type === 'image') {
                 const file = fileInput.files[0];
-                if (!file) { alert('Расм танланг!'); return; }
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    push(ref(db, 'posts'), { type: 'image', title, desc, content: e.target.result, timestamp: Date.now() })
-                        .then(() => alert('Қўшилди!'));
-                };
-                reader.readAsDataURL(file);
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        persistPostPayload(editId, {
+                            type: 'image',
+                            title,
+                            desc,
+                            imageSource,
+                            sourceUrl,
+                            content: e.target.result
+                        });
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    const fallbackContent = existingPost && existingPost.type === 'image' ? existingPost.content : '';
+                    if (!fallbackContent) {
+                        alert('Расм танланг!');
+                        return;
+                    }
+                    persistPostPayload(editId, {
+                        type: 'image',
+                        title,
+                        desc,
+                        imageSource,
+                        sourceUrl,
+                        content: fallbackContent
+                    });
+                }
             } else {
-                if (!iframeCode) { alert('YouTube кодини киритинг!'); return; }
-                push(ref(db, 'posts'), { type: 'video', title, desc, content: iframeCode, timestamp: Date.now() })
-                    .then(() => alert('Қўшилди!'));
+                if (!iframeCode) {
+                    alert('YouTube кодини киритинг!');
+                    return;
+                }
+                persistPostPayload(editId, {
+                    type: 'video',
+                    title,
+                    desc,
+                    imageSource,
+                    sourceUrl,
+                    content: iframeCode
+                });
             }
         };
     </script>
